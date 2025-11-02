@@ -18,6 +18,9 @@ public class Menu : MonoBehaviour
     [SerializeField] Color[] colourPalette1;
     [SerializeField] Color[] colourPalette2;
     [SerializeField] Color[] colourPalette3;
+    [SerializeField] Button colourPalette1Object;
+    [SerializeField] Button colourPalette2Object;
+    [SerializeField] Button colourPalette3Object;
     [SerializeField] Button[] buttons;
     [SerializeField] TextMeshProUGUI[] texts;
     [SerializeField] Image[] imagesForeground;
@@ -42,6 +45,23 @@ public class Menu : MonoBehaviour
 
         qualityDropdown.value = PlayerPrefs.GetInt("_qualityLevel");
         QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("_qualityLevel"));
+
+        if (PlayerPrefs.GetInt("_palette") == 0)
+            PlayerPrefs.SetInt("_palette", 1);
+        SetColourPalette(PlayerPrefs.GetInt("_palette"));
+
+        switch (PlayerPrefs.GetInt("_palette"))
+        {
+            case 1:
+                colourPalette1Object.interactable = false;
+                break;
+            case 2:
+                colourPalette2Object.interactable = false;
+                break;
+            case 3:
+                colourPalette3Object.interactable = false;
+                break;
+        }
     }
     public void Play()
     {
@@ -49,7 +69,7 @@ public class Menu : MonoBehaviour
     }
     public void FocusFocusMe()
     {
-        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(focusMe);
+        UnityEngine.EventSystems.EventSystem.current.SetSelectedGameObject(focusMe); //! Sometimes throws object reference null
     }
     public void SetMasterVolume(float volume)
     {
@@ -113,6 +133,7 @@ public class Menu : MonoBehaviour
                 Debug.Log("Wtf?");
                 break;
         }
+        PlayerPrefs.SetInt("_palette", index);
     }
     void ColourSwitcher(Color[] palette)
     {
