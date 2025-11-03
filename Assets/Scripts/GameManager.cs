@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
+//! I'm so sick - Flyleaf
 public class GameManager : MonoBehaviour
 {
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
