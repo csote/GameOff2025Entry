@@ -8,6 +8,7 @@ using UnityEngine.SceneManagement;
 public class Menu : MonoBehaviour
 {
     [SerializeField] GameObject focusMe;
+    [SerializeField] GameObject fade;
     [SerializeField] AudioMixer audioMixer;
     [SerializeField] Slider masterSlider;
     [SerializeField] Slider musicSlider;
@@ -64,6 +65,12 @@ public class Menu : MonoBehaviour
         }
     }
     public void Play()
+    {
+        fade.SetActive(true);
+        StartCoroutine(GameManager.FadeIn(fade, 51));
+        Invoke(nameof(LoadGame), 1);
+    }
+    void LoadGame()
     {
         SceneManager.LoadScene("Game");
     }
