@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-//! I'm so sick - Flyleaf
+//! I was so sick - WalkBranch
 public class GameManager : MonoBehaviour
 {
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
