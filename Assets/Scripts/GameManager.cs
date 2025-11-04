@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
+
     Inputs input;
+    Menu menuScript;
 
     float sleepiness;
     float waveHeight;
@@ -49,8 +51,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeOut(fade, 51));
         Invoke(nameof(Necessary), 0.51f);
         #if UNITY_EDITOR
-        PlayerPrefs.SetInt("_level", 0);
+        //PlayerPrefs.SetInt("_level", 0);
         #endif
+        menuScript = GetComponent<Menu>();
+        menuScript.ControlImageSwitcher(menuScript.currentPalette);
         InitValues(PlayerPrefs.GetInt("_level"));
     }
     void Necessary()

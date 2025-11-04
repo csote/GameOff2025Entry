@@ -19,6 +19,7 @@ public class Menu : MonoBehaviour
     [SerializeField] Color[] colourPalette1;
     [SerializeField] Color[] colourPalette2;
     [SerializeField] Color[] colourPalette3;
+    [HideInInspector] public Color[] currentPalette;
     [SerializeField] Button colourPalette1Object;
     [SerializeField] Button colourPalette2Object;
     [SerializeField] Button colourPalette3Object;
@@ -27,6 +28,14 @@ public class Menu : MonoBehaviour
     [SerializeField] Image[] imagesForeground;
     [SerializeField] Image[] imagesBackground;
     [SerializeField] Image[] imagesBackgroundDark;
+    [SerializeField] Image[] images1;
+    [SerializeField] Image[] images2;
+    [SerializeField] Image[] images3;
+    [SerializeField] Image[] images4;
+    [SerializeField] Image[] controlImages;
+    [SerializeField] Sprite[] sprites1;
+    [SerializeField] Sprite[] sprites2;
+    [SerializeField] Sprite[] sprites3;
     [SerializeField] Image pauseMenuBG;
 
     void Start()
@@ -128,12 +137,15 @@ public class Menu : MonoBehaviour
         switch (index)
         {
             case 1:
+                currentPalette = colourPalette1;
                 ColourSwitcher(colourPalette1);
                 break;
             case 2:
+                currentPalette = colourPalette2;
                 ColourSwitcher(colourPalette2);
                 break;
             case 3:
+                currentPalette = colourPalette3;
                 ColourSwitcher(colourPalette3);
                 break;
             default:
@@ -147,6 +159,58 @@ public class Menu : MonoBehaviour
         ButtonColourSwitcher(palette);
         TextColourSwitcher(palette);
         ImageColourSwitcher(palette);
+        ImageSwitcher(palette);
+
+        if (SceneManager.GetActiveScene().name == "Game")
+            ControlImageSwitcher(palette);
+    }
+    public void ControlImageSwitcher(Color[] palette)
+    {
+        foreach (Image image in controlImages)
+        {
+            if (palette == colourPalette1)
+                image.sprite = sprites1[0];
+            if (palette == colourPalette2)
+                image.sprite = sprites2[0];
+            if (palette == colourPalette3)
+                image.sprite = sprites3[0];
+        }
+    }
+    void ImageSwitcher(Color[] palette)
+    {
+        if (palette == colourPalette1)
+        {
+            foreach (Image image in images1)
+                image.sprite = sprites1[1];
+            foreach (Image image in images2)
+                image.sprite = sprites1[2];
+            foreach (Image image in images3)
+                image.sprite = sprites1[3];
+            foreach (Image image in images4)
+                image.sprite = sprites1[4];
+        }
+        if (palette == colourPalette2)
+        {
+            foreach (Image image in images1)
+                image.sprite = sprites2[1];
+            foreach (Image image in images2)
+                image.sprite = sprites2[2];
+            foreach (Image image in images3)
+                image.sprite = sprites2[3];
+            foreach (Image image in images4)
+                image.sprite = sprites2[4];
+        }
+        if (palette == colourPalette3)
+        {
+            foreach (Image image in images1)
+                image.sprite = sprites3[1];
+            foreach (Image image in images2)
+                image.sprite = sprites3[2];
+            foreach (Image image in images3)
+                image.sprite = sprites3[3];
+            foreach (Image image in images4)
+                image.sprite = sprites3[4];
+        }
     }
     void ButtonColourSwitcher(Color[] palette)
     {
