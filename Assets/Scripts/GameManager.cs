@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -34,6 +35,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject he;
     [SerializeField] GameObject she;
 
+    [SerializeField] TextMeshProUGUI wh;
+    [SerializeField] TextMeshProUGUI f;
+    [SerializeField] TextMeshProUGUI windText;
+    [SerializeField] TextMeshProUGUI n;
+    [SerializeField] GameObject campfire;
+    [SerializeField] Sprite fireless;
+
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
     [SerializeField] GameObject fade;
@@ -60,7 +68,6 @@ public class GameManager : MonoBehaviour
         fade.SetActive(true);
         StartCoroutine(FadeOut(fade, 51));
         Invoke(nameof(Necessary), 0.51f);
-        PlayerPrefs.SetInt("_level", 0);
         menuScript = GetComponent<Menu>();
         menuScript.ControlImageSwitcher(menuScript.currentPalette);
         InitValues(PlayerPrefs.GetInt("_level"));
@@ -75,6 +82,10 @@ public class GameManager : MonoBehaviour
         if (!paused && started)
         {
             FactorCheck();
+            wh.text = "WH: " + waveHeightSpot;
+            f.text = "F: " + frequencySpot;
+            windText.text = "W: " + wind;
+            n.text = "N: " + riskN;
             FallingAsleep();
         }
     }
@@ -95,28 +106,32 @@ public class GameManager : MonoBehaviour
         switch (index)
         {
             case 0:
-                sleepiness = 50;
+                he.SetActive(true);
+                she.SetActive(false);
                 difficulty = 2.5f;
                 campfireLit = true;
                 musicPlaying = false;
                 raining = false;
                 break;
             case 1:
-                sleepiness = 25;
+                he.SetActive(false);
+                she.SetActive(true);
                 difficulty = 2;
                 campfireLit = false;
                 musicPlaying = true;
-                raining = false;
+                raining = true;
                 break;
             case 2:
-                sleepiness = 20;
+                he.SetActive(true);
+                she.SetActive(true);
                 difficulty = 1.5f;
                 campfireLit = false;
                 musicPlaying = true;
                 raining = false;
                 break;
             case 3:
-                sleepiness = 20;
+                he.SetActive(true);
+                she.SetActive(true);
                 difficulty = 1;
                 campfireLit = true;
                 musicPlaying = true;
@@ -125,8 +140,9 @@ public class GameManager : MonoBehaviour
             default:
                 break;
         }
-        sleepinessBar.value = sleepiness;
 
+        sleepiness = 50;
+        sleepinessBar.value = sleepiness;
         waveHeight = 0;
         frequency = 0;
         wind = 0;
@@ -170,11 +186,97 @@ public class GameManager : MonoBehaviour
         }
         else if (he.activeSelf)
         {
-            
+            if (musicPlaying)
+            {
+                if (waveHeightCorrect && frequencyCorrect && campfireLit && raining)
+                    factorsCorrect = 3;
+                else if (
+                (waveHeightCorrect && frequencyCorrect && campfireLit)
+                || (waveHeightCorrect && frequencyCorrect && raining)
+                || (frequencyCorrect && campfireLit && raining))
+                    factorsCorrect = 2;
+                else if (
+                (waveHeightCorrect && frequencyCorrect)
+                || (waveHeightCorrect && campfireLit)
+                || (waveHeightCorrect && raining)
+                || (frequencyCorrect && campfireLit)
+                || (frequencyCorrect && raining)
+                || (campfireLit && raining))
+                    factorsCorrect = 1;
+                else if (waveHeightCorrect || frequencyCorrect || campfireLit || raining)
+                    factorsCorrect = 0;
+                else
+                    factorsCorrect = -1;
+            }
+            else
+            {
+                if (waveHeightCorrect && frequencyCorrect && campfireLit && raining)
+                    factorsCorrect = 4;
+                else if (
+                (waveHeightCorrect && frequencyCorrect && campfireLit)
+                || (waveHeightCorrect && frequencyCorrect && raining)
+                || (frequencyCorrect && campfireLit && raining))
+                    factorsCorrect = 3;
+                else if (
+                (waveHeightCorrect && frequencyCorrect)
+                || (waveHeightCorrect && campfireLit)
+                || (waveHeightCorrect && raining)
+                || (frequencyCorrect && campfireLit)
+                || (frequencyCorrect && raining)
+                || (campfireLit && raining))
+                    factorsCorrect = 2;
+                else if (waveHeightCorrect || frequencyCorrect || campfireLit || raining)
+                    factorsCorrect = 1;
+                else
+                    factorsCorrect = 0;
+            }
         }
         else if (she.activeSelf)
         {
-            
+            if (raining)
+            {
+                if (waveHeightCorrect && frequencyCorrect && campfireLit && musicPlaying)
+                    factorsCorrect = 3;
+                else if (
+                (waveHeightCorrect && frequencyCorrect && campfireLit)
+                || (waveHeightCorrect && frequencyCorrect && musicPlaying)
+                || (frequencyCorrect && campfireLit && musicPlaying))
+                    factorsCorrect = 2;
+                else if (
+                (waveHeightCorrect && frequencyCorrect)
+                || (waveHeightCorrect && campfireLit)
+                || (waveHeightCorrect && musicPlaying)
+                || (frequencyCorrect && campfireLit)
+                || (frequencyCorrect && musicPlaying)
+                || (campfireLit && musicPlaying))
+                    factorsCorrect = 1;
+                else if (waveHeightCorrect || frequencyCorrect || campfireLit || musicPlaying)
+                    factorsCorrect = 0;
+                else
+                    factorsCorrect = -1;
+            }
+            else
+            {
+                if (waveHeightCorrect && frequencyCorrect && campfireLit && musicPlaying)
+                    factorsCorrect = 4;
+                else if (
+                (waveHeightCorrect && frequencyCorrect && campfireLit)
+                || (waveHeightCorrect && frequencyCorrect && musicPlaying)
+                || (frequencyCorrect && campfireLit && musicPlaying))
+                    factorsCorrect = 3;
+                else if (
+                (waveHeightCorrect && frequencyCorrect)
+                || (waveHeightCorrect && campfireLit)
+                || (waveHeightCorrect && musicPlaying)
+                || (frequencyCorrect && campfireLit)
+                || (frequencyCorrect && musicPlaying)
+                || (campfireLit && musicPlaying))
+                    factorsCorrect = 2;
+                else if (waveHeightCorrect || frequencyCorrect || campfireLit || musicPlaying)
+                    factorsCorrect = 1;
+                else
+                    factorsCorrect = 0;
+            }
         }
     }
     void FallingAsleep()
@@ -212,24 +314,32 @@ public class GameManager : MonoBehaviour
             else if (he.activeSelf)
             {
                 if (factorsCorrect == 4)
-                    sleepiness += Time.deltaTime * difficulty * 2;
+                    sleepiness += Time.deltaTime * difficulty * 2.3f;
                 else if (factorsCorrect == 3)
+                    sleepiness += Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == 2)
                     sleepiness += Time.deltaTime * difficulty * 1.3f;
                 else if (factorsCorrect == 1)
                     sleepiness -= Time.deltaTime * difficulty * 1.3f;
                 else if (factorsCorrect == 0)
                     sleepiness -= Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == -1)
+                    sleepiness -= Time.deltaTime * difficulty * 2.3f;
             }
             else if (she.activeSelf)
             {
                 if (factorsCorrect == 4)
-                    sleepiness += Time.deltaTime * difficulty * 2;
+                    sleepiness += Time.deltaTime * difficulty * 2.3f;
                 else if (factorsCorrect == 3)
+                    sleepiness += Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == 2)
                     sleepiness += Time.deltaTime * difficulty * 1.3f;
                 else if (factorsCorrect == 1)
                     sleepiness -= Time.deltaTime * difficulty * 1.3f;
                 else if (factorsCorrect == 0)
                     sleepiness -= Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == -1)
+                    sleepiness -= Time.deltaTime * difficulty * 2.3f;
             }
         }
     }
@@ -274,15 +384,26 @@ public class GameManager : MonoBehaviour
     IEnumerator CampfireCheck()
     {
         yield return new WaitForSeconds(1);
-        if (waveHeight >= 90)
+        if (waveHeight >= 90 && campfireLit)
+        {
             risk = Random.Range(riskN, 101);
+            riskN++;
+        }
 
-        if (risk == 100)
+        if (risk >= 100)
         {
             riskN = 0;
+            risk = 0;
+            campfireLit = false;
+            campfire.GetComponent<Image>().sprite = fireless;
+            campfire.GetComponent<Button>().interactable = true;
             sleepiness -= 20;
         }
         StartCoroutine(CampfireCheck());
+    }
+    public void LightCampfire()
+    {
+        campfireLit = true;
     }
     IEnumerator ChangeSpots()
     {
@@ -332,5 +453,9 @@ public class GameManager : MonoBehaviour
         }
         color.a = 0;
         component.color = color;
+    }
+    public void ResetLevels()
+    {
+        PlayerPrefs.SetInt("_level", 0);
     }
 }
