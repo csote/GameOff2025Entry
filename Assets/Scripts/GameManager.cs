@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-//! I was so sick - WalkBranch
 public class GameManager : MonoBehaviour
 {
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
@@ -19,10 +18,21 @@ public class GameManager : MonoBehaviour
     float wind;
     float waveHeightSpot;
     float frequencySpot;
-    float risk;
+    float leeway;
+    int risk;
+    int riskN;
     float difficulty;
+    int factorsCorrect;
+    bool waveHeightCorrect;
+    bool frequencyCorrect;
+    bool campfireLit;
+    bool musicPlaying;
+    bool raining;
     bool won;
     bool lost;
+
+    [SerializeField] GameObject he;
+    [SerializeField] GameObject she;
 
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
@@ -50,9 +60,7 @@ public class GameManager : MonoBehaviour
         fade.SetActive(true);
         StartCoroutine(FadeOut(fade, 51));
         Invoke(nameof(Necessary), 0.51f);
-        #if UNITY_EDITOR
-        //PlayerPrefs.SetInt("_level", 0);
-        #endif
+        PlayerPrefs.SetInt("_level", 0);
         menuScript = GetComponent<Menu>();
         menuScript.ControlImageSwitcher(menuScript.currentPalette);
         InitValues(PlayerPrefs.GetInt("_level"));
@@ -66,6 +74,7 @@ public class GameManager : MonoBehaviour
         MenuCheck();
         if (!paused && started)
         {
+            FactorCheck();
             FallingAsleep();
         }
     }
@@ -87,15 +96,31 @@ public class GameManager : MonoBehaviour
         {
             case 0:
                 sleepiness = 50;
-                difficulty = 2;
+                difficulty = 2.5f;
+                campfireLit = true;
+                musicPlaying = false;
+                raining = false;
                 break;
             case 1:
                 sleepiness = 25;
-                difficulty = 1;
+                difficulty = 2;
+                campfireLit = false;
+                musicPlaying = true;
+                raining = false;
                 break;
             case 2:
                 sleepiness = 20;
-                difficulty = 0.5f;
+                difficulty = 1.5f;
+                campfireLit = false;
+                musicPlaying = true;
+                raining = false;
+                break;
+            case 3:
+                sleepiness = 20;
+                difficulty = 1;
+                campfireLit = true;
+                musicPlaying = true;
+                raining = true;
                 break;
             default:
                 break;
@@ -107,13 +132,20 @@ public class GameManager : MonoBehaviour
         wind = 0;
         waveHeightSpot = 0;
         frequencySpot = 0;
+        leeway = 10;
         risk = 0;
+        riskN = 0;
+        factorsCorrect = 0;
+        waveHeightCorrect = false;
+        frequencyCorrect = false;
         won = false;
         lost = false;
         paused = false;
         started = false;
         StartCoroutine(ChangeSpots());
-        StartCoroutine(Wind());
+        if (index != 0)
+            StartCoroutine(Wind());
+        StartCoroutine(CampfireCheck());
     }
     void MenuCheck()
     {
@@ -121,6 +153,28 @@ public class GameManager : MonoBehaviour
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             paused = !paused;
+        }
+    }
+    void FactorCheck()
+    {
+        if (he.activeSelf && she.activeSelf)
+        {
+            if (waveHeightCorrect && frequencyCorrect && campfireLit)
+                factorsCorrect = 3;
+            else if ((waveHeightCorrect && frequencyCorrect) || (frequencyCorrect && campfireLit) || (waveHeightCorrect && campfireLit))
+                factorsCorrect = 2;
+            else if (waveHeightCorrect || frequencyCorrect || campfireLit)
+                factorsCorrect = 1;
+            else
+                factorsCorrect = 0;
+        }
+        else if (he.activeSelf)
+        {
+            
+        }
+        else if (she.activeSelf)
+        {
+            
         }
     }
     void FallingAsleep()
@@ -143,7 +197,40 @@ public class GameManager : MonoBehaviour
         {
             WaveHeightCheck();
             FrequencyCheck();
-            CampfireCheck();
+
+            if (he.activeSelf && she.activeSelf)
+            {
+                if (factorsCorrect == 3)
+                    sleepiness += Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == 2)
+                    sleepiness += Time.deltaTime * difficulty * 1.3f;
+                else if (factorsCorrect == 1)
+                    sleepiness -= Time.deltaTime * difficulty * 1.3f;
+                else if (factorsCorrect == 0)
+                    sleepiness -= Time.deltaTime * difficulty * 2;
+            }
+            else if (he.activeSelf)
+            {
+                if (factorsCorrect == 4)
+                    sleepiness += Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == 3)
+                    sleepiness += Time.deltaTime * difficulty * 1.3f;
+                else if (factorsCorrect == 1)
+                    sleepiness -= Time.deltaTime * difficulty * 1.3f;
+                else if (factorsCorrect == 0)
+                    sleepiness -= Time.deltaTime * difficulty * 2;
+            }
+            else if (she.activeSelf)
+            {
+                if (factorsCorrect == 4)
+                    sleepiness += Time.deltaTime * difficulty * 2;
+                else if (factorsCorrect == 3)
+                    sleepiness += Time.deltaTime * difficulty * 1.3f;
+                else if (factorsCorrect == 1)
+                    sleepiness -= Time.deltaTime * difficulty * 1.3f;
+                else if (factorsCorrect == 0)
+                    sleepiness -= Time.deltaTime * difficulty * 2;
+            }
         }
     }
     IEnumerator Lose()
@@ -172,32 +259,30 @@ public class GameManager : MonoBehaviour
     }
     void WaveHeightCheck()
     {
-        if (waveHeight >= waveHeightSpot - 10 && waveHeight <= waveHeightSpot + 10)
-            sleepiness += Time.deltaTime * difficulty;
+        if (waveHeight >= waveHeightSpot - leeway && waveHeight <= waveHeightSpot + leeway)
+            waveHeightCorrect = true;
         else
-            sleepiness -= Time.deltaTime * difficulty * 1.2f;
+            waveHeightCorrect = false;
     }
     void FrequencyCheck()
     {
-        if (frequency >= frequencySpot - 10 && frequency <= frequencySpot + 10)
-            sleepiness += Time.deltaTime * difficulty;
+        if (frequency >= frequencySpot - leeway && frequency <= frequencySpot + leeway)
+            frequencyCorrect = true;
         else
-            sleepiness -= Time.deltaTime * difficulty * 1.2f;
+            frequencyCorrect = false;
     }
-    void CampfireCheck()
+    IEnumerator CampfireCheck()
     {
+        yield return new WaitForSeconds(1);
         if (waveHeight >= 90)
-            risk += Time.deltaTime;
-        else
-            risk -= Time.deltaTime;
+            risk = Random.Range(riskN, 101);
 
-        if (risk <= 0)
-            risk = 0;
-        else if (risk >= 10)
+        if (risk == 100)
         {
-            risk = 0;
+            riskN = 0;
             sleepiness -= 20;
         }
+        StartCoroutine(CampfireCheck());
     }
     IEnumerator ChangeSpots()
     {
