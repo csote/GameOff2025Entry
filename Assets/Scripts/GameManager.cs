@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI f;
     [SerializeField] TextMeshProUGUI windText;
     [SerializeField] TextMeshProUGUI n;
+    [SerializeField] Animator waveAnimator;
     [SerializeField] GameObject campfire;
     [SerializeField] Sprite fireless;
 
@@ -98,6 +99,7 @@ public class GameManager : MonoBehaviour
     public void ChangeFrequency(float value)
     {
         frequency = value + wind;
+        waveAnimator.speed = 0.6f + (value * 0.006f);
         started = true;
     }
 
@@ -141,6 +143,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
+        waveAnimator.speed = 0.6f;
         sleepiness = 50;
         sleepinessBar.value = sleepiness;
         waveHeight = 0;
