@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    //* Lol, lmao even.
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
