@@ -6,10 +6,10 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    //* Lol, lmao even.
+    readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
+    readonly static WaitForSeconds _waitForSeconds1 = new(1);
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
-    readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
 
     Inputs input;
     Menu menuScript;
@@ -22,7 +22,9 @@ public class GameManager : MonoBehaviour
     float frequencySpot;
     float leeway;
     int risk;
+    int risk2;
     int riskN;
+    int riskN2;
     float difficulty;
     int factorsCorrect;
     bool waveHeightCorrect;
@@ -40,9 +42,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI f;
     [SerializeField] TextMeshProUGUI windText;
     [SerializeField] TextMeshProUGUI n;
-    [SerializeField] Animator waveAnimator;
+    [SerializeField] Light globalLight;
+    [SerializeField] GameObject waveDawn;
+    [SerializeField] GameObject waveNoon;
+    [SerializeField] GameObject waveNight;
+    [SerializeField] Animator waveDawnAnimator;
+    [SerializeField] Animator waveNoonAnimator;
+    [SerializeField] Animator waveNightAnimator;
     [SerializeField] GameObject campfire;
+    [SerializeField] GameObject campfireLight;
+    [SerializeField] GameObject boombox;
     [SerializeField] Sprite fireless;
+    [SerializeField] Sprite broken;
 
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
@@ -100,7 +111,7 @@ public class GameManager : MonoBehaviour
     public void ChangeFrequency(float value)
     {
         frequency = value + wind;
-        waveAnimator.speed = 0.6f + (value * 0.006f);
+        WaveSpeed(value);
         started = true;
     }
 
@@ -111,15 +122,23 @@ public class GameManager : MonoBehaviour
             case 0:
                 he.SetActive(true);
                 she.SetActive(false);
+                waveNight.SetActive(true);
+                waveNightAnimator.speed = 0.6f;
                 difficulty = 2.5f;
+                globalLight.intensity = 0.3f;
                 campfireLit = true;
+                campfireLight.SetActive(true);
                 musicPlaying = false;
                 raining = false;
                 break;
             case 1:
                 he.SetActive(false);
                 she.SetActive(true);
+                waveDawn.SetActive(true);
+                waveDawnAnimator.speed = 0.6f;
                 difficulty = 2;
+                globalLight.intensity = 1;
+                globalLight.color = new Color(255/255f, 213/255f, 213/255f, 1);
                 campfireLit = false;
                 musicPlaying = true;
                 raining = true;
@@ -127,7 +146,10 @@ public class GameManager : MonoBehaviour
             case 2:
                 he.SetActive(true);
                 she.SetActive(true);
+                waveNoon.SetActive(true);
+                waveNoonAnimator.speed = 0.6f;
                 difficulty = 1.5f;
+                globalLight.intensity = 1;
                 campfireLit = false;
                 musicPlaying = true;
                 raining = false;
@@ -135,8 +157,12 @@ public class GameManager : MonoBehaviour
             case 3:
                 he.SetActive(true);
                 she.SetActive(true);
+                waveNight.SetActive(true);
+                waveNightAnimator.speed = 0.6f;
                 difficulty = 1;
+                globalLight.intensity = 0.3f;
                 campfireLit = true;
+                campfireLight.SetActive(true);
                 musicPlaying = true;
                 raining = true;
                 break;
@@ -144,7 +170,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        waveAnimator.speed = 0.6f;
+        waveNoonAnimator.speed = 0.6f;
         sleepiness = 50;
         sleepinessBar.value = sleepiness;
         waveHeight = 0;
@@ -155,6 +181,8 @@ public class GameManager : MonoBehaviour
         leeway = 10;
         risk = 0;
         riskN = 0;
+        risk2 = 0;
+        riskN2 = 0;
         factorsCorrect = 0;
         waveHeightCorrect = false;
         frequencyCorrect = false;
@@ -166,6 +194,7 @@ public class GameManager : MonoBehaviour
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
+        StartCoroutine(BoomboxCheck());
     }
     void MenuCheck()
     {
@@ -283,6 +312,15 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    void WaveSpeed(float value)
+    {
+        if (waveDawn.activeSelf)
+            waveDawnAnimator.speed = 0.6f + (value * 0.006f);
+        else if (waveNoon.activeSelf)
+            waveNoonAnimator.speed = 0.6f + (value * 0.006f);
+        else if (waveNight.activeSelf)
+            waveNightAnimator.speed = 0.6f + (value * 0.006f);
+    }
     void FallingAsleep()
     {
         sleepinessBar.value = sleepiness;
@@ -387,8 +425,8 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator CampfireCheck()
     {
-        yield return new WaitForSeconds(1);
-        if (waveHeight >= 90 && campfireLit)
+        yield return _waitForSeconds1;
+        if (waveHeight >= 80 && campfireLit)
         {
             risk = Random.Range(riskN, 101);
             riskN++;
@@ -399,6 +437,7 @@ public class GameManager : MonoBehaviour
             riskN = 0;
             risk = 0;
             campfireLit = false;
+            campfireLight.SetActive(false);
             campfire.GetComponent<Image>().sprite = fireless;
             campfire.GetComponent<Button>().interactable = true;
             sleepiness -= 20;
@@ -408,6 +447,30 @@ public class GameManager : MonoBehaviour
     public void LightCampfire()
     {
         campfireLit = true;
+    }
+    IEnumerator BoomboxCheck()
+    {
+        yield return _waitForSeconds1;
+        if (frequency >= 80 && musicPlaying)
+        {
+            risk2 = Random.Range(riskN2, 101);
+            riskN2++;
+        }
+
+        if (risk2 >= 100)
+        {
+            riskN2 = 0;
+            risk2 = 0;
+            musicPlaying = false;
+            boombox.GetComponent<Image>().sprite = broken;
+            boombox.GetComponent<Button>().interactable = true;
+            sleepiness -= 20;
+        }
+        StartCoroutine(BoomboxCheck());
+    }
+    public void RepairBoombox()
+    {
+        musicPlaying = true;
     }
     IEnumerator ChangeSpots()
     {
