@@ -132,6 +132,10 @@ public class Menu : MonoBehaviour
         Resolution res = resolutions[index];
         Screen.SetResolution(res.width, res.height, Screen.fullScreen);
     }
+    public void ResetLevels()
+    {
+        PlayerPrefs.SetInt("_level", 0);
+    }
     public void SetColourPalette(int index)
     {
         switch (index)

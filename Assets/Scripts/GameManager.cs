@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -21,10 +22,10 @@ public class GameManager : MonoBehaviour
     float waveHeightSpot;
     float frequencySpot;
     float leeway;
-    int risk;
-    int risk2;
-    int riskN;
-    int riskN2;
+    int campfireRisk;
+    int boomboxRisk;
+    int campfireRiskFloor;
+    int boomboxRiskFloor;
     float difficulty;
     int factorsCorrect;
     bool waveHeightCorrect;
@@ -38,11 +39,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject he;
     [SerializeField] GameObject she;
 
-    [SerializeField] TextMeshProUGUI wh;
-    [SerializeField] TextMeshProUGUI f;
+    [SerializeField] TextMeshProUGUI waveHeightText;
+    [SerializeField] TextMeshProUGUI frequencyText;
     [SerializeField] TextMeshProUGUI windText;
-    [SerializeField] TextMeshProUGUI n;
-    [SerializeField] Light globalLight;
+    [SerializeField] TextMeshProUGUI campfireRiskFloorText;
+    [SerializeField] TextMeshProUGUI boomboxRiskFloorText;
+    [SerializeField] Light2D globalLight;
     [SerializeField] GameObject waveDawn;
     [SerializeField] GameObject waveNoon;
     [SerializeField] GameObject waveNight;
@@ -95,10 +97,11 @@ public class GameManager : MonoBehaviour
         if (!paused && started)
         {
             FactorCheck();
-            wh.text = "WH: " + waveHeightSpot;
-            f.text = "F: " + frequencySpot;
+            waveHeightText.text = "WH: " + waveHeightSpot;
+            frequencyText.text = "F: " + frequencySpot;
             windText.text = "W: " + wind;
-            n.text = "N: " + riskN;
+            campfireRiskFloorText.text = "N: " + campfireRiskFloor;
+            boomboxRiskFloorText.text = "N2: " + boomboxRiskFloor;
             FallingAsleep();
         }
     }
@@ -179,10 +182,10 @@ public class GameManager : MonoBehaviour
         waveHeightSpot = 0;
         frequencySpot = 0;
         leeway = 10;
-        risk = 0;
-        riskN = 0;
-        risk2 = 0;
-        riskN2 = 0;
+        campfireRisk = 0;
+        campfireRiskFloor = 0;
+        boomboxRisk = 0;
+        boomboxRiskFloor = 0;
         factorsCorrect = 0;
         waveHeightCorrect = false;
         frequencyCorrect = false;
@@ -428,14 +431,14 @@ public class GameManager : MonoBehaviour
         yield return _waitForSeconds1;
         if (waveHeight >= 80 && campfireLit)
         {
-            risk = Random.Range(riskN, 101);
-            riskN++;
+            campfireRisk = Random.Range(campfireRiskFloor, 101);
+            campfireRiskFloor++;
         }
 
-        if (risk >= 100)
+        if (campfireRisk >= 100)
         {
-            riskN = 0;
-            risk = 0;
+            campfireRiskFloor = 0;
+            campfireRisk = 0;
             campfireLit = false;
             campfireLight.SetActive(false);
             campfire.GetComponent<Image>().sprite = fireless;
@@ -453,14 +456,14 @@ public class GameManager : MonoBehaviour
         yield return _waitForSeconds1;
         if (frequency >= 80 && musicPlaying)
         {
-            risk2 = Random.Range(riskN2, 101);
-            riskN2++;
+            boomboxRisk = Random.Range(boomboxRiskFloor, 101);
+            boomboxRiskFloor++;
         }
 
-        if (risk2 >= 100)
+        if (boomboxRisk >= 100)
         {
-            riskN2 = 0;
-            risk2 = 0;
+            boomboxRiskFloor = 0;
+            boomboxRisk = 0;
             musicPlaying = false;
             boombox.GetComponent<Image>().sprite = broken;
             boombox.GetComponent<Button>().interactable = true;
@@ -520,9 +523,5 @@ public class GameManager : MonoBehaviour
         }
         color.a = 0;
         component.color = color;
-    }
-    public void ResetLevels()
-    {
-        PlayerPrefs.SetInt("_level", 0);
     }
 }
