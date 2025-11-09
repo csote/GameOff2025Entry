@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI campfireRiskFloorText;
     [SerializeField] TextMeshProUGUI boomboxRiskFloorText;
     [SerializeField] Light2D globalLight;
+    [SerializeField] GameObject dialogueBox;
     [SerializeField] GameObject waveDawn;
     [SerializeField] GameObject waveNoon;
     [SerializeField] GameObject waveNight;
@@ -198,6 +199,7 @@ public class GameManager : MonoBehaviour
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
         StartCoroutine(BoomboxCheck());
+        StartCoroutine(Dialogue(index));
     }
     void MenuCheck()
     {
@@ -388,6 +390,40 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    IEnumerator Dialogue(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                yield return new WaitUntil(() => started);
+                yield return new WaitForSeconds(1);
+                StartCoroutine(Speak("What a lonely day, and it's mine.", 4));
+                yield return new WaitForSeconds(6);
+                StartCoroutine(Speak("The most loneliest day of my liiiiiiiiiiiiiiiiiiife.", 4));
+                yield return new WaitForSeconds(6);
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            default:
+                Debug.Log("Not a level.");
+                break;
+        }
+    }
+    IEnumerator Speak(string sentence, float cd)
+    {
+        dialogueBox.GetComponentInChildren<TextMeshProUGUI>().text = sentence;
+        dialogueBox.SetActive(true);
+        StartCoroutine(FadeIn(dialogueBox, 17, 128));
+        yield return new WaitForSeconds(cd);
+        StartCoroutine(FadeOut(dialogueBox, 17, 128));
+        yield return new WaitUntil(() => dialogueBox.GetComponent<Image>().color.a == 0);
+        dialogueBox.SetActive(false);
+        dialogueBox.GetComponentInChildren<TextMeshProUGUI>().text = "";
+    }
     IEnumerator Lose()
     {
         //* Waking up animation
@@ -490,34 +526,36 @@ public class GameManager : MonoBehaviour
         frequency += wind;
         StartCoroutine(Wind());
     }
-    public static IEnumerator FadeIn(GameObject objectToFade, int cooldown)
+    public static IEnumerator FadeIn(GameObject objectToFade, int cooldown, float maxStep = 255, bool isImage = true)
     {
-        float a = 0;
-        float n = 255 / cooldown;
-        Image component = objectToFade.GetComponent<Image>();
+        float alpha = 0;
+        float step = maxStep / cooldown;
+        Image component = null;
+        if (isImage)
+            component = objectToFade.GetComponent<Image>();
         Color color = component.color;
 
         for (int i = 0; i < cooldown; i++)
         {
-            a += n;
-            color.a = a / 255;
+            alpha += step;
+            color.a = alpha / 255f;
             component.color = color;
             yield return _waitForSeconds0_01;
         }
-        color.a = 1;
+        color.a = maxStep / 255f;
         component.color = color;
     }
-    public static IEnumerator FadeOut(GameObject objectToFade, int cooldown)
+    public static IEnumerator FadeOut(GameObject objectToFade, int cooldown, float startingAlpha = 255)
     {
-        float a = 255;
-        float n = 255 / cooldown;
+        float alpha = startingAlpha;
+        float step = startingAlpha / cooldown;
         Image component = objectToFade.GetComponent<Image>();
         Color color = component.color;
 
         for (int i = 0; i < cooldown; i++)
         {
-            a -= n;
-            color.a = a / 255;
+            alpha -= step;
+            color.a = alpha / 255;
             component.color = color;
             yield return _waitForSeconds0_01;
         }

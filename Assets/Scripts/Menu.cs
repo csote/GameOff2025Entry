@@ -185,7 +185,8 @@ public class Menu : MonoBehaviour
     {
         if (palette == colourPalette1)
         {
-            dialogueBox.sprite = sprites1[5];
+            if (SceneManager.GetActiveScene().name == "Game")
+                dialogueBox.sprite = sprites1[5];
             foreach (Image image in images1)
                 image.sprite = sprites1[1];
             foreach (Image image in images2)
@@ -197,7 +198,8 @@ public class Menu : MonoBehaviour
         }
         if (palette == colourPalette2)
         {
-            dialogueBox.sprite = sprites2[5];
+            if (SceneManager.GetActiveScene().name == "Game")
+                dialogueBox.sprite = sprites2[5];
             foreach (Image image in images1)
                 image.sprite = sprites2[1];
             foreach (Image image in images2)
@@ -209,7 +211,8 @@ public class Menu : MonoBehaviour
         }
         if (palette == colourPalette3)
         {
-            dialogueBox.sprite = sprites3[5];
+            if (SceneManager.GetActiveScene().name == "Game")
+                dialogueBox.sprite = sprites3[5];
             foreach (Image image in images1)
                 image.sprite = sprites3[1];
             foreach (Image image in images2)
