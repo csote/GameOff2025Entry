@@ -15,26 +15,9 @@ public class GameManager : MonoBehaviour
     Inputs input;
     Menu menuScript;
 
-    float sleepiness;
-    float waveHeight;
-    float frequency;
-    float wind;
-    float waveHeightSpot;
-    float frequencySpot;
-    float leeway;
-    int campfireRisk;
-    int boomboxRisk;
-    int campfireRiskFloor;
-    int boomboxRiskFloor;
-    float difficulty;
-    int factorsCorrect;
-    bool waveHeightCorrect;
-    bool frequencyCorrect;
-    bool campfireLit;
-    bool musicPlaying;
-    bool raining;
-    bool won;
-    bool lost;
+    float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty;
+    int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
+    bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice;
 
     [SerializeField] GameObject he;
     [SerializeField] GameObject she;
@@ -64,7 +47,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] Slider sleepinessBar;
 
     [HideInInspector] public bool paused;
-    bool started;
 
     void Awake()
     {
@@ -193,7 +175,11 @@ public class GameManager : MonoBehaviour
         won = false;
         lost = false;
         paused = false;
+        Time.timeScale = 1;
         started = false;
+        speaking = false;
+        choosing = false;
+        choice = false;
         StartCoroutine(ChangeSpots());
         if (index != 0)
             StartCoroutine(Wind());
@@ -207,6 +193,7 @@ public class GameManager : MonoBehaviour
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             paused = !paused;
+            Time.timeScale = paused ? 0 : 1;
         }
     }
     void FactorCheck()
@@ -392,11 +379,12 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Dialogue(int index)
     {
+        yield return new WaitUntil(() => started);
+        speaking = true;
+        yield return _waitForSeconds1;
         switch (index)
         {
             case 0:
-                yield return new WaitUntil(() => started);
-                yield return new WaitForSeconds(1);
                 StartCoroutine(Speak("What a lonely day, and it's mine.", 4));
                 yield return new WaitForSeconds(6);
                 StartCoroutine(Speak("The most loneliest day of my liiiiiiiiiiiiiiiiiiife.", 4));
@@ -405,24 +393,74 @@ public class GameManager : MonoBehaviour
             case 1:
                 break;
             case 2:
+                StartCoroutine(Speak("He: Hi.", 4));
+                yield return new WaitForSeconds(6);
+                StartCoroutine(Speak("She: Hey.", 4));
+                yield return new WaitForSeconds(6);
+                StartCoroutine(Speak("He: You like me?", 4, false));
+                choosing = true;
+                yield return new WaitUntil(() => !choosing);
+                if (choice)
+                {
+                    PlayerPrefs.SetInt("_relationship", 1);
+                    StartCoroutine(Speak("She: Yep.", 4));
+                    yield return new WaitForSeconds(6);
+                }
+                else
+                {
+                    PlayerPrefs.SetInt("_relationship", 2);
+                    StartCoroutine(Speak("She: Nope.", 4));
+                    yield return new WaitForSeconds(6);
+                }
                 break;
             case 3:
+                switch (PlayerPrefs.GetInt("_relationship"))
+                {
+                    case 0:
+                        StartCoroutine(Speak("You are not supposed to see this.", 4));
+                        yield return new WaitForSeconds(6);
+                        break;
+                    case 1: //* Yes
+                        break;
+                    case 2: //* No
+                        break;
+                }
                 break;
             default:
                 Debug.Log("Not a level.");
                 break;
         }
+        speaking = false;
     }
-    IEnumerator Speak(string sentence, float cd)
+    IEnumerator Speak(string sentence, float cd, bool autoClose = true)
     {
-        dialogueBox.GetComponentInChildren<TextMeshProUGUI>().text = sentence;
+        TextMeshProUGUI dialogueText = dialogueBox.GetComponentInChildren<TextMeshProUGUI>();
+        dialogueText.text = sentence;
         dialogueBox.SetActive(true);
-        StartCoroutine(FadeIn(dialogueBox, 17, 128));
+        if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+            StartCoroutine(FadeIn(dialogueBox, 17, 128));
+        else
+            StartCoroutine(FadeIn(dialogueBox, 17, 235));
+        StartCoroutine(FadeIn(dialogueText.gameObject, 17, 255, false));
         yield return new WaitForSeconds(cd);
-        StartCoroutine(FadeOut(dialogueBox, 17, 128));
-        yield return new WaitUntil(() => dialogueBox.GetComponent<Image>().color.a == 0);
-        dialogueBox.SetActive(false);
-        dialogueBox.GetComponentInChildren<TextMeshProUGUI>().text = "";
+        if (autoClose)
+        {
+            if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                StartCoroutine(FadeOut(dialogueBox, 17, 128));
+            else
+                StartCoroutine(FadeOut(dialogueBox, 17, 235));
+            StartCoroutine(FadeOut(dialogueText.gameObject, 17, 255, false));
+            yield return new WaitUntil(() => dialogueBox.GetComponent<Image>().color.a == 0);
+            dialogueBox.SetActive(false);
+            dialogueText.text = "";
+        }
+    }
+    public void Choose(bool result)
+    {
+        choice = false;
+        if (result)
+            choice = true;
+        choosing = false;
     }
     IEnumerator Lose()
     {
@@ -443,7 +481,7 @@ public class GameManager : MonoBehaviour
     IEnumerator Win()
     {
         PlayerPrefs.SetInt("_level", PlayerPrefs.GetInt("_level") + 1);
-        yield return null;
+        yield return new WaitUntil(() => !speaking);
         fade.SetActive(true);
         StartCoroutine(FadeIn(fade, 51));
         Invoke(nameof(Necessary2), 1);
@@ -530,36 +568,76 @@ public class GameManager : MonoBehaviour
     {
         float alpha = 0;
         float step = maxStep / cooldown;
-        Image component = null;
-        if (isImage)
-            component = objectToFade.GetComponent<Image>();
-        Color color = component.color;
+        Image component;
+        TextMeshProUGUI text;
 
-        for (int i = 0; i < cooldown; i++)
+        if (isImage)
         {
-            alpha += step;
-            color.a = alpha / 255f;
+            component = objectToFade.GetComponent<Image>();
+            Color color = component.color;
+
+            for (int i = 0; i < cooldown; i++)
+            {
+                alpha += step;
+                color.a = alpha / 255f;
+                component.color = color;
+                yield return _waitForSeconds0_01;
+            }
+            color.a = maxStep / 255f;
             component.color = color;
-            yield return _waitForSeconds0_01;
         }
-        color.a = maxStep / 255f;
-        component.color = color;
+        else
+        {
+            text = objectToFade.GetComponent<TextMeshProUGUI>();
+            Color color = text.color;
+
+            for (int i = 0; i < cooldown; i++)
+            {
+                alpha += step;
+                color.a = alpha / 255f;
+                text.color = color;
+                yield return _waitForSeconds0_01;
+            }
+            color.a = maxStep / 255f;
+            text.color = color;
+        }
     }
-    public static IEnumerator FadeOut(GameObject objectToFade, int cooldown, float startingAlpha = 255)
+    public static IEnumerator FadeOut(GameObject objectToFade, int cooldown, float startingAlpha = 255, bool isImage = true)
     {
         float alpha = startingAlpha;
         float step = startingAlpha / cooldown;
-        Image component = objectToFade.GetComponent<Image>();
-        Color color = component.color;
+        Image component;
+        TextMeshProUGUI text;
 
-        for (int i = 0; i < cooldown; i++)
+        if (isImage)
         {
-            alpha -= step;
-            color.a = alpha / 255;
+            component = objectToFade.GetComponent<Image>();
+            Color color = component.color;
+
+            for (int i = 0; i < cooldown; i++)
+            {
+                alpha -= step;
+                color.a = alpha / 255;
+                component.color = color;
+                yield return _waitForSeconds0_01;
+            }
+            color.a = 0;
             component.color = color;
-            yield return _waitForSeconds0_01;
         }
-        color.a = 0;
-        component.color = color;
+        else
+        {
+            text = objectToFade.GetComponent<TextMeshProUGUI>();
+            Color color = text.color;
+
+            for (int i = 0; i < cooldown; i++)
+            {
+                alpha -= step;
+                color.a = alpha / 255;
+                text.color = color;
+                yield return _waitForSeconds0_01;
+            }
+            color.a = 0;
+            text.color = color;
+        }
     }
 }

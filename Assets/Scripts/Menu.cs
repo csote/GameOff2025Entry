@@ -136,6 +136,7 @@ public class Menu : MonoBehaviour
     public void ResetLevels()
     {
         PlayerPrefs.SetInt("_level", 0);
+        PlayerPrefs.SetInt("_relationship", 0);
     }
     public void SetColourPalette(int index)
     {
