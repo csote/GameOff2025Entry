@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    //! Fully aliiiiiiiiiiiiiiive
+    //! Fully aliiiiiiiiiiiiiive
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
     readonly static WaitForSeconds _waitForSeconds1 = new(1);
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
