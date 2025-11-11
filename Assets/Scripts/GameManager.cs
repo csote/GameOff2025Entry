@@ -7,16 +7,17 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    //! Fully aliiiiiiiiiiiiiive
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
     readonly static WaitForSeconds _waitForSeconds1 = new(1);
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
 
+    public static int textSpeed;
+
     Inputs input;
     Menu menuScript;
 
-    float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty;
+    float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime;
     int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice;
 
@@ -44,6 +45,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
+    [SerializeField] GameObject choiceButton1;
+    [SerializeField] GameObject choiceButton2;
     [SerializeField] GameObject fade;
     [SerializeField] Slider sleepinessBar;
 
@@ -78,6 +81,7 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         MenuCheck();
+        WaitTimeChecker();
         if (!paused && started)
         {
             FactorCheck();
@@ -195,6 +199,36 @@ public class GameManager : MonoBehaviour
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             paused = !paused;
             Time.timeScale = paused ? 0 : 1;
+        }
+    }
+    void WaitTimeChecker()
+    {
+        switch (textSpeed)
+        {
+            case 1:
+                waitTime = 0.02f;
+                break;
+            case 3:
+                waitTime = 0.06f;
+                break;
+            case 5:
+                waitTime = 0.1f;
+                break;
+            case 15:
+                waitTime = 0.3f;
+                break;
+            case 17:
+                waitTime = 0.34f;
+                break;
+            case 51:
+                waitTime = 1.02f;
+                break;
+            case 85:
+                waitTime = 1.7f;
+                break;
+            case 255:
+                waitTime = 5.1f;
+                break;
         }
     }
     void FactorCheck()
@@ -317,17 +351,35 @@ public class GameManager : MonoBehaviour
     void FallingAsleep()
     {
         sleepinessBar.value = sleepiness;
-        if (sleepiness <= 0 && !lost)
+        if (PlayerPrefs.GetInt("_level") == 3)
         {
-            lost = true;
-            sleepiness = 0;
-            StartCoroutine(Lose());
+            if (sleepiness <= 0 && !lost)
+            {
+                lost = true;
+                sleepiness = 0;
+                StartCoroutine(LoseSpecial());
+            }
+            else if (sleepiness >= 100 && !won)
+            {
+                won = true;
+                sleepiness = 100;
+                StartCoroutine(WinSpecial());
+            }
         }
-        else if (sleepiness >= 100 && !won)
+        else
         {
-            won = true;
-            sleepiness = 100;
-            StartCoroutine(Win());
+            if (sleepiness <= 0 && !lost)
+            {
+                lost = true;
+                sleepiness = 0;
+                StartCoroutine(Lose());
+            }
+            else if (sleepiness >= 100 && !won)
+            {
+                won = true;
+                sleepiness = 100;
+                StartCoroutine(Win());
+            }
         }
 
         if (!won && !lost)
@@ -386,44 +438,51 @@ public class GameManager : MonoBehaviour
         switch (index)
         {
             case 0:
-                StartCoroutine(Speak("What a lonely day, and it's mine.", 4));
-                yield return new WaitForSeconds(6);
-                StartCoroutine(Speak("The most loneliest day of my liiiiiiiiiiiiiiiiiiife.", 4));
-                yield return new WaitForSeconds(6);
+                StartCoroutine(Speak("", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime + 2);
                 break;
             case 1:
+                StartCoroutine(Speak("", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime + 2);
                 break;
             case 2:
-                StartCoroutine(Speak("He: Hi.", 4));
-                yield return new WaitForSeconds(6);
-                StartCoroutine(Speak("She: Hey.", 4));
-                yield return new WaitForSeconds(6);
-                StartCoroutine(Speak("He: You like me?", 4, false));
+                StartCoroutine(Speak("He: Hi.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime + 2);
+                StartCoroutine(Speak("She: Hey.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime + 2);
+                StartCoroutine(Speak("He: You like me?", waitTime, textSpeed, false));
                 choosing = true;
+                yield return new WaitForSeconds(2);
+                StartCoroutine(PresentChoice(51));
                 yield return new WaitUntil(() => !choosing);
+                yield return new WaitForSeconds(2);
                 if (choice)
                 {
                     PlayerPrefs.SetInt("_relationship", 1);
-                    StartCoroutine(Speak("She: Yep.", 4));
-                    yield return new WaitForSeconds(6);
+                    StartCoroutine(Speak("She: Yep.", waitTime, textSpeed));
+                    yield return new WaitForSeconds(waitTime + 2);
                 }
                 else
                 {
                     PlayerPrefs.SetInt("_relationship", 2);
-                    StartCoroutine(Speak("She: Nope.", 4));
-                    yield return new WaitForSeconds(6);
+                    StartCoroutine(Speak("She: Nope.", waitTime, textSpeed));
+                    yield return new WaitForSeconds(waitTime + 2);
                 }
                 break;
             case 3:
                 switch (PlayerPrefs.GetInt("_relationship"))
                 {
                     case 0:
-                        StartCoroutine(Speak("You are not supposed to see this.", 4));
-                        yield return new WaitForSeconds(6);
+                        StartCoroutine(Speak("You are not supposed to see this.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime + 2);
                         break;
-                    case 1: //* Yes
+                    case 1:
+                        StartCoroutine(Speak("He: Yay.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime + 2);
                         break;
-                    case 2: //* No
+                    case 2:
+                        StartCoroutine(Speak("He: :(.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime + 2);
                         break;
                 }
                 break;
@@ -433,28 +492,41 @@ public class GameManager : MonoBehaviour
         }
         speaking = false;
     }
-    IEnumerator Speak(string sentence, float cd, bool autoClose = true)
+    IEnumerator Speak(string sentence, float closeTime, int cd, bool autoClose = true)
     {
         TextMeshProUGUI dialogueText = dialogueBox.GetComponentInChildren<TextMeshProUGUI>();
         dialogueText.text = sentence;
         dialogueBox.SetActive(true);
         if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
-            StartCoroutine(FadeIn(dialogueBox, 17, 128));
+            StartCoroutine(FadeIn(dialogueBox, cd, 128));
         else
-            StartCoroutine(FadeIn(dialogueBox, 17, 235));
-        StartCoroutine(FadeIn(dialogueText.gameObject, 17, 255, false));
-        yield return new WaitForSeconds(cd);
+            StartCoroutine(FadeIn(dialogueBox, cd, 235));
+        StartCoroutine(FadeIn(dialogueText.gameObject, cd, 255, false));
+        yield return new WaitForSeconds(closeTime);
         if (autoClose)
         {
             if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
-                StartCoroutine(FadeOut(dialogueBox, 17, 128));
+                StartCoroutine(FadeOut(dialogueBox, cd, 128));
             else
-                StartCoroutine(FadeOut(dialogueBox, 17, 235));
-            StartCoroutine(FadeOut(dialogueText.gameObject, 17, 255, false));
+                StartCoroutine(FadeOut(dialogueBox, cd, 235));
+            StartCoroutine(FadeOut(dialogueText.gameObject, cd, 255, false));
             yield return new WaitUntil(() => dialogueBox.GetComponent<Image>().color.a == 0);
             dialogueBox.SetActive(false);
             dialogueText.text = "";
         }
+    }
+    IEnumerator PresentChoice(int cd)
+    {
+        StartCoroutine(FadeIn(choiceButton1.GetComponentInChildren<TextMeshProUGUI>().gameObject, cd, 255, false));
+        StartCoroutine(FadeIn(choiceButton2.GetComponentInChildren<TextMeshProUGUI>().gameObject, cd, 255, false));
+        yield return new WaitForSeconds(2);
+        choiceButton1.GetComponent<Button>().interactable = true;
+        choiceButton2.GetComponent<Button>().interactable = true;
+        yield return new WaitUntil(() => !choosing);
+        choiceButton1.GetComponent<Button>().interactable = false;
+        choiceButton2.GetComponent<Button>().interactable = false;
+        StartCoroutine(FadeOut(choiceButton1.GetComponentInChildren<TextMeshProUGUI>().gameObject, cd, 255, false));
+        StartCoroutine(FadeOut(choiceButton2.GetComponentInChildren<TextMeshProUGUI>().gameObject, cd, 255, false));
     }
     public void Choose(bool result)
     {
@@ -465,9 +537,11 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Lose()
     {
-        //* Waking up animation
         yield return null;
         loseMenu.SetActive(true);
+        choiceButton1.SetActive(false);
+        choiceButton2.SetActive(false);
+        StopAllCoroutines();
     }
     public void Restart()
     {
@@ -486,6 +560,14 @@ public class GameManager : MonoBehaviour
         fade.SetActive(true);
         StartCoroutine(FadeIn(fade, 51));
         Invoke(nameof(Necessary2), 1);
+    }
+    IEnumerator LoseSpecial()
+    {
+        yield return null;
+    }
+    IEnumerator WinSpecial()
+    {
+        yield return null;
     }
     void WaveHeightCheck()
     {
@@ -565,7 +647,7 @@ public class GameManager : MonoBehaviour
         frequency += wind;
         StartCoroutine(Wind());
     }
-    public static IEnumerator FadeIn(GameObject objectToFade, int cooldown, float maxStep = 255, bool isImage = true)
+    public static IEnumerator FadeIn(GameObject objectToFade, int cooldown, float maxStep = 255, bool isImage = true) //*1-3-5-15-17-51-85-255
     {
         float alpha = 0;
         float step = maxStep / cooldown;

@@ -13,6 +13,8 @@ public class Menu : MonoBehaviour
     [SerializeField] Slider masterSlider;
     [SerializeField] Slider musicSlider;
     [SerializeField] Slider SFXSlider;
+    [SerializeField] Slider textSpeedSlider;
+    [SerializeField] TextMeshProUGUI textSpeedText;
     [SerializeField] TMP_Dropdown qualityDropdown;
     [SerializeField] TMP_Dropdown resolutionDropdown;
     Resolution[] resolutions;
@@ -56,6 +58,9 @@ public class Menu : MonoBehaviour
 
         qualityDropdown.value = PlayerPrefs.GetInt("_qualityLevel");
         QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("_qualityLevel"));
+
+        textSpeedSlider.value = PlayerPrefs.GetInt("_textSpeedLevel");
+        SetTextSpeed(PlayerPrefs.GetInt("_textSpeedLevel"));
 
         if (PlayerPrefs.GetInt("_palette") == 0)
             PlayerPrefs.SetInt("_palette", 1);
@@ -137,6 +142,52 @@ public class Menu : MonoBehaviour
     {
         PlayerPrefs.SetInt("_level", 0);
         PlayerPrefs.SetInt("_relationship", 0);
+    }
+    public void SetTextSpeed(float value)
+    {
+        switch (value)
+        {
+            case 1:
+                GameManager.textSpeed = 255;
+                textSpeedText.text = "1 - We have places to be.";
+                PlayerPrefs.SetInt("_textSpeedLevel", 1);
+                break;
+            case 2:
+                GameManager.textSpeed = 85;
+                textSpeedText.text = "2 - Great taste for relaxation.";
+                PlayerPrefs.SetInt("_textSpeedLevel", 2);
+                break;
+            case 3:
+                GameManager.textSpeed = 51;
+                textSpeedText.text = "3 - What I use personally.";
+                PlayerPrefs.SetInt("_textSpeedLevel", 3);
+                break;
+            case 4:
+                GameManager.textSpeed = 17;
+                textSpeedText.text = "4 - Fast.";
+                PlayerPrefs.SetInt("_textSpeedLevel", 4);
+                break;
+            case 5:
+                GameManager.textSpeed = 15;
+                textSpeedText.text = "5 - Slightly faster.";
+                PlayerPrefs.SetInt("_textSpeedLevel", 5);
+                break;
+            case 6:
+                GameManager.textSpeed = 5;
+                textSpeedText.text = "6 - Even faster.";
+                PlayerPrefs.SetInt("_textSpeedLevel", 6);
+                break;
+            case 7:
+                GameManager.textSpeed = 3;
+                textSpeedText.text = "7 - Why is this an option?";
+                PlayerPrefs.SetInt("_textSpeedLevel", 7);
+                break;
+            case 8:
+                GameManager.textSpeed = 1;
+                textSpeedText.text = "8 - Can you even read that fast?";
+                PlayerPrefs.SetInt("_textSpeedLevel", 8);
+                break;
+        }
     }
     public void SetColourPalette(int index)
     {
