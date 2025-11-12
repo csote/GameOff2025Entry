@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-//* Commit
+//* (Boom!)
 public class GameManager : MonoBehaviour
 {
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
