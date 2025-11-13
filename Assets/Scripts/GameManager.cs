@@ -4,23 +4,32 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-//* (Boom!)
 public class GameManager : MonoBehaviour
 {
+    #region Regions
+    #region WaitForSeconds
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
     readonly static WaitForSeconds _waitForSeconds1 = new(1);
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
+    #endregion
 
-    public static int textSpeed;
+    #pragma warning disable UDR0001
+    public static int textSpeed; //* Bro is contained :skullemoji:
+    #pragma warning restore UDR0001
 
+    #region General
     Inputs input;
     Menu menuScript;
+    #endregion
 
+    #region Variables
     float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime;
     int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice;
+    #endregion
 
+    #region SerializeField
     [SerializeField] GameObject he;
     [SerializeField] GameObject she;
 
@@ -51,6 +60,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Slider sleepinessBar;
 
     [HideInInspector] public bool paused;
+    #endregion
+    #endregion
 
     void Awake()
     {
@@ -357,13 +368,19 @@ public class GameManager : MonoBehaviour
             {
                 lost = true;
                 sleepiness = 0;
-                StartCoroutine(LoseSpecial());
+                if (PlayerPrefs.GetInt("_relationship") == 1)
+                    StartCoroutine(WinSpecial());
+                else if (PlayerPrefs.GetInt("_relationship") == 2)
+                    StartCoroutine(LoseSpecial());
             }
             else if (sleepiness >= 100 && !won)
             {
                 won = true;
                 sleepiness = 100;
-                StartCoroutine(WinSpecial());
+                if (PlayerPrefs.GetInt("_relationship") == 1)
+                    StartCoroutine(LoseSpecial());
+                else if (PlayerPrefs.GetInt("_relationship") == 2)
+                    StartCoroutine(WinSpecial());
             }
         }
         else
@@ -438,35 +455,52 @@ public class GameManager : MonoBehaviour
         switch (index)
         {
             case 0:
-                StartCoroutine(Speak("", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime + 2);
+                StartCoroutine(Speak("Lorem ipsum", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
+                StartCoroutine(Speak("dolor sit", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
+                StartCoroutine(Speak("amet consectetur", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
+                StartCoroutine(Speak("adipiscing elit", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
                 break;
             case 1:
-                StartCoroutine(Speak("", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime + 2);
+                StartCoroutine(Speak("Lorem ipsum", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
+                StartCoroutine(Speak("dolor sit", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
+                StartCoroutine(Speak("amet consectetur", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
+                StartCoroutine(Speak("adipiscing elit", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.5f);
                 break;
             case 2:
                 StartCoroutine(Speak("He: Hi.", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime + 2);
+                yield return new WaitForSeconds(waitTime * 2.5f);
                 StartCoroutine(Speak("She: Hey.", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime + 2);
+                yield return new WaitForSeconds(waitTime * 2.5f);
                 StartCoroutine(Speak("He: You like me?", waitTime, textSpeed, false));
                 choosing = true;
-                yield return new WaitForSeconds(2);
-                StartCoroutine(PresentChoice(51));
+                yield return new WaitForSeconds(waitTime * 1.5f);
+                StartCoroutine(PresentChoice(textSpeed));
                 yield return new WaitUntil(() => !choosing);
-                yield return new WaitForSeconds(2);
+                StartCoroutine(FadeOut(dialogueBox, textSpeed, 235));
+                StartCoroutine(FadeOut(dialogueBox.GetComponentInChildren<TextMeshProUGUI>().gameObject, textSpeed, 255, false));
+                yield return new WaitUntil(() => dialogueBox.GetComponent<Image>().color.a == 0);
+                dialogueBox.SetActive(false);
+                dialogueBox.GetComponentInChildren<TextMeshProUGUI>().text = "";
+                yield return new WaitForSeconds(0.5f);
                 if (choice)
                 {
                     PlayerPrefs.SetInt("_relationship", 1);
                     StartCoroutine(Speak("She: Yep.", waitTime, textSpeed));
-                    yield return new WaitForSeconds(waitTime + 2);
+                    yield return new WaitForSeconds(waitTime * 2.5f);
                 }
                 else
                 {
                     PlayerPrefs.SetInt("_relationship", 2);
                     StartCoroutine(Speak("She: Nope.", waitTime, textSpeed));
-                    yield return new WaitForSeconds(waitTime + 2);
+                    yield return new WaitForSeconds(waitTime * 2.5f);
                 }
                 break;
             case 3:
@@ -474,15 +508,15 @@ public class GameManager : MonoBehaviour
                 {
                     case 0:
                         StartCoroutine(Speak("You are not supposed to see this.", waitTime, textSpeed));
-                        yield return new WaitForSeconds(waitTime + 2);
+                        yield return new WaitForSeconds(waitTime * 2.5f);
                         break;
                     case 1:
                         StartCoroutine(Speak("He: Yay.", waitTime, textSpeed));
-                        yield return new WaitForSeconds(waitTime + 2);
+                        yield return new WaitForSeconds(waitTime * 2.5f);
                         break;
                     case 2:
                         StartCoroutine(Speak("He: :(.", waitTime, textSpeed));
-                        yield return new WaitForSeconds(waitTime + 2);
+                        yield return new WaitForSeconds(waitTime * 2.5f);
                         break;
                 }
                 break;
@@ -563,10 +597,14 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator LoseSpecial()
     {
+        PlayerPrefs.SetInt("_ending", 1);
+        SceneManager.LoadScene("Endings");
         yield return null;
     }
     IEnumerator WinSpecial()
     {
+        PlayerPrefs.SetInt("_ending", 2);
+        SceneManager.LoadScene("Endings");
         yield return null;
     }
     void WaveHeightCheck()

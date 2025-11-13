@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
+    #region Variables
     [SerializeField] GameObject focusMe;
     [SerializeField] GameObject fade;
     [SerializeField] AudioMixer audioMixer;
@@ -40,6 +41,7 @@ public class Menu : MonoBehaviour
     [SerializeField] Sprite[] sprites2;
     [SerializeField] Sprite[] sprites3;
     [SerializeField] Image pauseMenuBG;
+    #endregion
 
     void Start()
     {
@@ -59,6 +61,8 @@ public class Menu : MonoBehaviour
         qualityDropdown.value = PlayerPrefs.GetInt("_qualityLevel");
         QualitySettings.SetQualityLevel(PlayerPrefs.GetInt("_qualityLevel"));
 
+        if (PlayerPrefs.GetInt("_textSpeedLevel") == 0)
+            PlayerPrefs.SetInt("_textSpeedLevel", 2);
         textSpeedSlider.value = PlayerPrefs.GetInt("_textSpeedLevel");
         SetTextSpeed(PlayerPrefs.GetInt("_textSpeedLevel"));
 
@@ -142,6 +146,7 @@ public class Menu : MonoBehaviour
     {
         PlayerPrefs.SetInt("_level", 0);
         PlayerPrefs.SetInt("_relationship", 0);
+        PlayerPrefs.SetInt("_ending", 0);
     }
     public void SetTextSpeed(float value)
     {
