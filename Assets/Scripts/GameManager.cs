@@ -24,20 +24,16 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region Variables
-    float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime;
+    float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime, maxWHF, windForce;
     int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice;
+    string direction;
     #endregion
 
     #region SerializeField
     [SerializeField] GameObject he;
     [SerializeField] GameObject she;
 
-    [SerializeField] TextMeshProUGUI waveHeightText;
-    [SerializeField] TextMeshProUGUI frequencyText;
-    [SerializeField] TextMeshProUGUI windText;
-    [SerializeField] TextMeshProUGUI campfireRiskFloorText;
-    [SerializeField] TextMeshProUGUI boomboxRiskFloorText;
     [SerializeField] Light2D globalLight;
     [SerializeField] GameObject dialogueBox;
     [SerializeField] GameObject waveDawn;
@@ -51,6 +47,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject boombox;
     [SerializeField] Sprite fireless;
     [SerializeField] Sprite broken;
+    [SerializeField] Image whfFill;
+    [SerializeField] Image campfireRiskFill;
+    [SerializeField] Image boomboxRiskFill;
 
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
@@ -96,11 +95,7 @@ public class GameManager : MonoBehaviour
         if (!paused && started)
         {
             FactorCheck();
-            waveHeightText.text = "WH: " + waveHeightSpot;
-            frequencyText.text = "F: " + frequencySpot;
-            windText.text = "W: " + wind;
-            campfireRiskFloorText.text = "N: " + campfireRiskFloor;
-            boomboxRiskFloorText.text = "N2: " + boomboxRiskFloor;
+            UpdateUI();
             FallingAsleep();
         }
     }
@@ -132,6 +127,7 @@ public class GameManager : MonoBehaviour
                 campfireLight.SetActive(true);
                 musicPlaying = false;
                 raining = false;
+                windForce = 10;
                 break;
             case 1:
                 he.SetActive(false);
@@ -144,6 +140,7 @@ public class GameManager : MonoBehaviour
                 campfireLit = false;
                 musicPlaying = true;
                 raining = true;
+                windForce = 6;
                 break;
             case 2:
                 he.SetActive(true);
@@ -155,6 +152,7 @@ public class GameManager : MonoBehaviour
                 campfireLit = false;
                 musicPlaying = true;
                 raining = false;
+                windForce = 3;
                 break;
             case 3:
                 he.SetActive(true);
@@ -167,6 +165,7 @@ public class GameManager : MonoBehaviour
                 campfireLight.SetActive(true);
                 musicPlaying = true;
                 raining = true;
+                windForce = 12;
                 break;
             default:
                 break;
@@ -175,11 +174,11 @@ public class GameManager : MonoBehaviour
         waveNoonAnimator.speed = 0.6f;
         sleepiness = 50;
         sleepinessBar.value = sleepiness;
-        waveHeight = 0;
-        frequency = 0;
+        waveHeight = 10;
+        frequency = 10;
         wind = 0;
-        waveHeightSpot = 0;
-        frequencySpot = 0;
+        waveHeightSpot = 10;
+        frequencySpot = 10;
         leeway = 10;
         campfireRisk = 0;
         campfireRiskFloor = 0;
@@ -211,6 +210,19 @@ public class GameManager : MonoBehaviour
             paused = !paused;
             Time.timeScale = paused ? 0 : 1;
         }
+    }
+    void UpdateUI()
+    {
+        maxWHF = waveHeightSpot / 100;
+        if (whfFill.fillAmount <= 0)
+            direction = "";
+        else if (whfFill.fillAmount >= maxWHF)
+            direction = "down";
+
+        if (direction == "down")
+            whfFill.fillAmount -= 1.6f * Time.deltaTime * ((frequencySpot / 100) + 0.01f);
+        else
+            whfFill.fillAmount += 1.6f * Time.deltaTime * ((frequencySpot / 100) + 0.01f);
     }
     void WaitTimeChecker()
     {
@@ -628,12 +640,14 @@ public class GameManager : MonoBehaviour
         {
             campfireRisk = Random.Range(campfireRiskFloor, 101);
             campfireRiskFloor++;
+            campfireRiskFill.fillAmount = campfireRiskFloor / 100f;
         }
 
         if (campfireRisk >= 100)
         {
             campfireRiskFloor = 0;
             campfireRisk = 0;
+            campfireRiskFill.fillAmount = 0;
             campfireLit = false;
             campfireLight.SetActive(false);
             campfire.GetComponent<Image>().sprite = fireless;
@@ -653,12 +667,14 @@ public class GameManager : MonoBehaviour
         {
             boomboxRisk = Random.Range(boomboxRiskFloor, 101);
             boomboxRiskFloor++;
+            boomboxRiskFill.fillAmount = boomboxRiskFloor / 100f;
         }
 
         if (boomboxRisk >= 100)
         {
             boomboxRiskFloor = 0;
             boomboxRisk = 0;
+            boomboxRiskFill.fillAmount = 0;
             musicPlaying = false;
             boombox.GetComponent<Image>().sprite = broken;
             boombox.GetComponent<Button>().interactable = true;
@@ -672,15 +688,17 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator ChangeSpots()
     {
-        waveHeightSpot = Random.Range(0, 100f);
-        frequencySpot = Random.Range(0, 100f);
+        yield return new WaitUntil(() => started);
+        waveHeightSpot = Random.Range(10, 100f);
+        frequencySpot = Random.Range(10, 100f);
         yield return _waitForSeconds30;
         StartCoroutine(ChangeSpots());
     }
     IEnumerator Wind()
     {
+        yield return new WaitUntil(() => started);
         yield return _waitForSeconds10;
-        wind = Random.Range(-10f, 10f);
+        wind = Random.Range(-windForce, windForce);
         waveHeight += wind;
         frequency += wind;
         StartCoroutine(Wind());

@@ -36,6 +36,13 @@ public class Menu : MonoBehaviour
     [SerializeField] Image[] images3;
     [SerializeField] Image[] images4;
     [SerializeField] Image dialogueBox;
+    [SerializeField] Image WHF;
+    [SerializeField] Image WHFFill;
+    [SerializeField] Image wind;
+    [SerializeField] Image campfireRisk;
+    [SerializeField] Image campfireRiskFill;
+    [SerializeField] Image boomboxRisk;
+    [SerializeField] Image boomboxRiskFill;
     [SerializeField] Image[] controlImages;
     [SerializeField] Sprite[] sprites1;
     [SerializeField] Sprite[] sprites2;
@@ -243,7 +250,16 @@ public class Menu : MonoBehaviour
         if (palette == colourPalette1)
         {
             if (SceneManager.GetActiveScene().name == "Game")
+            {
                 dialogueBox.sprite = sprites1[5];
+                WHF.sprite = sprites1[6];
+                WHFFill.sprite = sprites1[7];
+                campfireRisk.sprite = sprites1[8];
+                campfireRiskFill.sprite = sprites1[9];
+                wind.sprite = sprites1[10];
+                boomboxRisk.sprite = sprites1[11];
+                boomboxRiskFill.sprite = sprites1[12];
+            }
             foreach (Image image in images1)
                 image.sprite = sprites1[1];
             foreach (Image image in images2)
@@ -256,7 +272,16 @@ public class Menu : MonoBehaviour
         if (palette == colourPalette2)
         {
             if (SceneManager.GetActiveScene().name == "Game")
+            {
                 dialogueBox.sprite = sprites2[5];
+                WHF.sprite = sprites2[6];
+                WHFFill.sprite = sprites2[7];
+                campfireRisk.sprite = sprites2[8];
+                campfireRiskFill.sprite = sprites2[9];
+                wind.sprite = sprites2[10];
+                boomboxRisk.sprite = sprites2[11];
+                boomboxRiskFill.sprite = sprites2[12];
+            }
             foreach (Image image in images1)
                 image.sprite = sprites2[1];
             foreach (Image image in images2)
@@ -269,7 +294,16 @@ public class Menu : MonoBehaviour
         if (palette == colourPalette3)
         {
             if (SceneManager.GetActiveScene().name == "Game")
+            {
                 dialogueBox.sprite = sprites3[5];
+                WHF.sprite = sprites3[6];
+                WHFFill.sprite = sprites3[7];
+                campfireRisk.sprite = sprites3[8];
+                campfireRiskFill.sprite = sprites3[9];
+                wind.sprite = sprites3[10];
+                boomboxRisk.sprite = sprites3[11];
+                boomboxRiskFill.sprite = sprites3[12];
+            }
             foreach (Image image in images1)
                 image.sprite = sprites3[1];
             foreach (Image image in images2)
