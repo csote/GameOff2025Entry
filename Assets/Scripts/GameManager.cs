@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
-    //! Think, Mark think!
     #region Regions
     #region WaitForSeconds
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
