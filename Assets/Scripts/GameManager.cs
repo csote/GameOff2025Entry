@@ -92,10 +92,10 @@ public class GameManager : MonoBehaviour
     {
         MenuCheck();
         WaitTimeChecker();
+        UpdateUI();
         if (!paused && started)
         {
             FactorCheck();
-            UpdateUI();
             FallingAsleep();
         }
     }
@@ -128,6 +128,7 @@ public class GameManager : MonoBehaviour
                 musicPlaying = false;
                 raining = false;
                 windForce = 10;
+                ChangeSpots(50, 50);
                 break;
             case 1:
                 he.SetActive(false);
@@ -177,8 +178,6 @@ public class GameManager : MonoBehaviour
         waveHeight = 10;
         frequency = 10;
         wind = 0;
-        waveHeightSpot = 10;
-        frequencySpot = 10;
         leeway = 10;
         campfireRisk = 0;
         campfireRiskFloor = 0;
@@ -195,7 +194,6 @@ public class GameManager : MonoBehaviour
         speaking = false;
         choosing = false;
         choice = false;
-        StartCoroutine(ChangeSpots());
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
@@ -686,13 +684,10 @@ public class GameManager : MonoBehaviour
     {
         musicPlaying = true;
     }
-    IEnumerator ChangeSpots()
+    void ChangeSpots(float waveHeight, float frequency)
     {
-        yield return new WaitUntil(() => started);
-        waveHeightSpot = Random.Range(10, 100f);
-        frequencySpot = Random.Range(10, 100f);
-        yield return _waitForSeconds30;
-        StartCoroutine(ChangeSpots());
+        waveHeightSpot = waveHeight;
+        frequencySpot = frequency;
     }
     IEnumerator Wind()
     {
