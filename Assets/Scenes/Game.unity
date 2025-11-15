@@ -4634,6 +4634,7 @@ MonoBehaviour:
   choiceButton2: {fileID: 255075921}
   fade: {fileID: 1800427019}
   sleepinessBar: {fileID: 1753766703}
+  dynamicText: {fileID: 1218082937}
   paused: 0
 --- !u!1 &723826554
 GameObject:
@@ -5294,7 +5295,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 8
+  m_MaxValue: 4
   m_WholeNumbers: 1
   m_Value: 1
   m_OnValueChanged:

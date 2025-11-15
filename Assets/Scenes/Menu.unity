@@ -3620,6 +3620,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 627226810}
+  - component: {fileID: 627226812}
   - component: {fileID: 627226811}
   - component: {fileID: 627226809}
   - component: {fileID: 627226808}
@@ -3823,6 +3824,13 @@ MonoBehaviour:
   images4:
   - {fileID: 491583811}
   dialogueBox: {fileID: 0}
+  WHF: {fileID: 0}
+  WHFFill: {fileID: 0}
+  wind: {fileID: 0}
+  campfireRisk: {fileID: 0}
+  campfireRiskFill: {fileID: 0}
+  boomboxRisk: {fileID: 0}
+  boomboxRiskFill: {fileID: 0}
   controlImages: []
   sprites1:
   - {fileID: 21300000, guid: 1d67521aefb0ea345b9f17c5571fd50d, type: 3}
@@ -3843,6 +3851,44 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 92dd53ee145bc33479b97ef9171ddfe2, type: 3}
   - {fileID: 21300000, guid: 76469900ec091d54582092d182859eb0, type: 3}
   pauseMenuBG: {fileID: 770780784}
+--- !u!114 &627226812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 627226806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e55c34a0de9ce842bf2810cd1a946b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  he: {fileID: 0}
+  she: {fileID: 0}
+  globalLight: {fileID: 0}
+  dialogueBox: {fileID: 0}
+  waveDawn: {fileID: 0}
+  waveNoon: {fileID: 0}
+  waveNight: {fileID: 0}
+  waveDawnAnimator: {fileID: 0}
+  waveNoonAnimator: {fileID: 0}
+  waveNightAnimator: {fileID: 0}
+  campfire: {fileID: 0}
+  campfireLight: {fileID: 0}
+  boombox: {fileID: 0}
+  fireless: {fileID: 0}
+  broken: {fileID: 0}
+  whfFill: {fileID: 0}
+  campfireRiskFill: {fileID: 0}
+  boomboxRiskFill: {fileID: 0}
+  pauseMenu: {fileID: 0}
+  loseMenu: {fileID: 0}
+  choiceButton1: {fileID: 0}
+  choiceButton2: {fileID: 0}
+  fade: {fileID: 0}
+  sleepinessBar: {fileID: 0}
+  dynamicText: {fileID: 0}
+  paused: 0
 --- !u!1 &641420468
 GameObject:
   m_ObjectHideFlags: 0
@@ -4464,7 +4510,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 0}
   m_Direction: 0
   m_MinValue: 1
-  m_MaxValue: 8
+  m_MaxValue: 4
   m_WholeNumbers: 1
   m_Value: 1
   m_OnValueChanged:

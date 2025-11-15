@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
+    GameManager gameManager;
     #region Variables
     [SerializeField] GameObject focusMe;
     [SerializeField] GameObject fade;
@@ -58,6 +59,8 @@ public class Menu : MonoBehaviour
 
     void InitValues()
     {
+        gameManager = GetComponent<GameManager>();
+
         audioMixer.SetFloat("_masterVolume", PlayerPrefs.GetFloat("_masterVolume") - 40);
         audioMixer.SetFloat("_musicVolume", PlayerPrefs.GetFloat("_musicVolume") - 40);
         audioMixer.SetFloat("_SFXVolume", PlayerPrefs.GetFloat("_SFXVolume") - 40);
@@ -93,7 +96,7 @@ public class Menu : MonoBehaviour
     public void Play()
     {
         fade.SetActive(true);
-        StartCoroutine(GameManager.FadeIn(fade, 51));
+        StartCoroutine(gameManager.FadeIn(fade, 51));
         Invoke(nameof(LoadGame), 1);
     }
     void LoadGame()
@@ -160,44 +163,24 @@ public class Menu : MonoBehaviour
         switch (value)
         {
             case 1:
-                GameManager.textSpeed = 255;
+                GameManager.textSpeed = 128;
                 textSpeedText.text = "1 - We have places to be.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 1);
                 break;
             case 2:
-                GameManager.textSpeed = 85;
+                GameManager.textSpeed = 64;
                 textSpeedText.text = "2 - Great taste for relaxation.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 2);
                 break;
             case 3:
-                GameManager.textSpeed = 51;
+                GameManager.textSpeed = 32;
                 textSpeedText.text = "3 - What I use personally.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 3);
                 break;
             case 4:
-                GameManager.textSpeed = 17;
+                GameManager.textSpeed = 16;
                 textSpeedText.text = "4 - Fast.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 4);
-                break;
-            case 5:
-                GameManager.textSpeed = 15;
-                textSpeedText.text = "5 - Slightly faster.";
-                PlayerPrefs.SetInt("_textSpeedLevel", 5);
-                break;
-            case 6:
-                GameManager.textSpeed = 5;
-                textSpeedText.text = "6 - Even faster.";
-                PlayerPrefs.SetInt("_textSpeedLevel", 6);
-                break;
-            case 7:
-                GameManager.textSpeed = 3;
-                textSpeedText.text = "7 - Why is this an option?";
-                PlayerPrefs.SetInt("_textSpeedLevel", 7);
-                break;
-            case 8:
-                GameManager.textSpeed = 1;
-                textSpeedText.text = "8 - Can you even read that fast?";
-                PlayerPrefs.SetInt("_textSpeedLevel", 8);
                 break;
         }
     }
