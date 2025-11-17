@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-//! Commit
+
 public class GameManager : MonoBehaviour
 {
     #region Regions
