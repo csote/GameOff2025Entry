@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted;
     string direction;
+    Animator currentAnimator;
     #endregion
 
     #region SerializeField
@@ -37,12 +38,24 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] Light2D globalLight;
     [SerializeField] GameObject dialogueBox;
+    [SerializeField] GameObject waveDawnLow;
     [SerializeField] GameObject waveDawn;
+    [SerializeField] GameObject waveDawnHigh;
+    [SerializeField] GameObject waveNoonLow;
     [SerializeField] GameObject waveNoon;
+    [SerializeField] GameObject waveNoonHigh;
+    [SerializeField] GameObject waveNightLow;
     [SerializeField] GameObject waveNight;
+    [SerializeField] GameObject waveNightHigh;
+    [SerializeField] Animator waveDawnLowAnimator;
     [SerializeField] Animator waveDawnAnimator;
+    [SerializeField] Animator waveDawnHighAnimator;
+    [SerializeField] Animator waveNoonLowAnimator;
     [SerializeField] Animator waveNoonAnimator;
+    [SerializeField] Animator waveNoonHighAnimator;
+    [SerializeField] Animator waveNightLowAnimator;
     [SerializeField] Animator waveNightAnimator;
+    [SerializeField] Animator waveNightHighAnimator;
     [SerializeField] GameObject campfire;
     [SerializeField] GameObject campfireLight;
     [SerializeField] GameObject boombox;
@@ -102,6 +115,7 @@ public class GameManager : MonoBehaviour
             WaveHeightCheck();
             FrequencyCheck();
             UpdateUI();
+            ChangeWaveType();
             if (!paused && started && permitted)
             {
                 FactorCheck();
@@ -132,6 +146,7 @@ public class GameManager : MonoBehaviour
                 she.SetActive(false);
                 waveNight.SetActive(true);
                 waveNightAnimator.speed = 0.6f;
+                currentAnimator = waveNightAnimator;
                 difficulty = 2.5f;
                 globalLight.intensity = 0.3f;
                 campfireLit = true;
@@ -147,6 +162,7 @@ public class GameManager : MonoBehaviour
                 she.SetActive(true);
                 waveDawn.SetActive(true);
                 waveDawnAnimator.speed = 0.6f;
+                currentAnimator = waveDawnAnimator;
                 difficulty = 2;
                 globalLight.intensity = 1;
                 globalLight.color = new Color(255/255f, 213/255f, 213/255f, 1);
@@ -160,6 +176,7 @@ public class GameManager : MonoBehaviour
                 she.SetActive(true);
                 waveNoon.SetActive(true);
                 waveNoonAnimator.speed = 0.6f;
+                currentAnimator = waveNoonAnimator;
                 difficulty = 1.5f;
                 globalLight.intensity = 1;
                 campfireLit = false;
@@ -172,6 +189,7 @@ public class GameManager : MonoBehaviour
                 she.SetActive(true);
                 waveNight.SetActive(true);
                 waveNightAnimator.speed = 0.6f;
+                currentAnimator = waveNightAnimator;
                 difficulty = 1;
                 globalLight.intensity = 0.3f;
                 campfireLit = true;
@@ -184,7 +202,6 @@ public class GameManager : MonoBehaviour
                 break;
         }
 
-        waveNoonAnimator.speed = 0.6f;
         sleepiness = 50;
         sleepinessBar.value = sleepiness;
         waveHeight = 10;
@@ -233,6 +250,44 @@ public class GameManager : MonoBehaviour
             whfFill.fillAmount -= 1.6f * Time.deltaTime * ((frequencySpot / 100) + 0.01f);
         else
             whfFill.fillAmount += 1.6f * Time.deltaTime * ((frequencySpot / 100) + 0.01f);
+    }
+    void ChangeWaveType()
+    {
+        var currentWaveCurrentFrame = currentAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length * (currentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1) * currentAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.frameRate;
+
+        if (currentWaveCurrentFrame < 1)
+        {
+            if (waveHeight <= 33)
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                {
+                    waveNightLow.SetActive(true);
+                    waveNight.SetActive(false);
+                    waveNightHigh.SetActive(false);
+                    currentAnimator = waveNightLowAnimator;
+                }
+            }
+            else if (waveHeight > 33 && waveHeight <= 66)
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                {
+                    waveNightLow.SetActive(false);
+                    waveNight.SetActive(true);
+                    waveNightHigh.SetActive(false);
+                    currentAnimator = waveNightAnimator;
+                }
+            }
+            else if (waveHeight > 66)
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                {
+                    waveNightLow.SetActive(false);
+                    waveNight.SetActive(false);
+                    waveNightHigh.SetActive(true);
+                    currentAnimator = waveNightHighAnimator;
+                }
+            }
+        }
     }
     void WaitTimeChecker()
     {
@@ -366,8 +421,12 @@ public class GameManager : MonoBehaviour
             waveDawnAnimator.speed = 0.6f + (value * 0.006f);
         else if (waveNoon.activeSelf)
             waveNoonAnimator.speed = 0.6f + (value * 0.006f);
+        else if (waveNightLow.activeSelf)
+            waveNightLowAnimator.speed = 0.6f + (value * 0.006f);
         else if (waveNight.activeSelf)
             waveNightAnimator.speed = 0.6f + (value * 0.006f);
+        else if (waveNightHigh.activeSelf)
+            waveNightHighAnimator.speed = 0.6f + (value * 0.006f);
     }
     void FallingAsleep()
     {
