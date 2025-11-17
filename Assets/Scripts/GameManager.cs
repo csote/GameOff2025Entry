@@ -1,7 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
+using UnityEngine.Rendering.Universal; //* For Light2D
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -144,9 +144,9 @@ public class GameManager : MonoBehaviour
             case 0:
                 he.SetActive(true);
                 she.SetActive(false);
-                waveNight.SetActive(true);
-                waveNightAnimator.speed = 0.6f;
-                currentAnimator = waveNightAnimator;
+                waveNightLow.SetActive(true);
+                waveNightLowAnimator.speed = 0.6f;
+                currentAnimator = waveNightLowAnimator;
                 difficulty = 2.5f;
                 globalLight.intensity = 0.3f;
                 campfireLit = true;
@@ -160,9 +160,9 @@ public class GameManager : MonoBehaviour
             case 1:
                 he.SetActive(false);
                 she.SetActive(true);
-                waveDawn.SetActive(true);
-                waveDawnAnimator.speed = 0.6f;
-                currentAnimator = waveDawnAnimator;
+                waveDawnLow.SetActive(true);
+                waveDawnLowAnimator.speed = 0.6f;
+                currentAnimator = waveDawnLowAnimator;
                 difficulty = 2;
                 globalLight.intensity = 1;
                 globalLight.color = new Color(255/255f, 213/255f, 213/255f, 1);
@@ -174,9 +174,9 @@ public class GameManager : MonoBehaviour
             case 2:
                 he.SetActive(true);
                 she.SetActive(true);
-                waveNoon.SetActive(true);
-                waveNoonAnimator.speed = 0.6f;
-                currentAnimator = waveNoonAnimator;
+                waveNoonLow.SetActive(true);
+                waveNoonLowAnimator.speed = 0.6f;
+                currentAnimator = waveNoonLowAnimator;
                 difficulty = 1.5f;
                 globalLight.intensity = 1;
                 campfireLit = false;
@@ -187,9 +187,9 @@ public class GameManager : MonoBehaviour
             case 3:
                 he.SetActive(true);
                 she.SetActive(true);
-                waveNight.SetActive(true);
-                waveNightAnimator.speed = 0.6f;
-                currentAnimator = waveNightAnimator;
+                waveNightLow.SetActive(true);
+                waveNightLowAnimator.speed = 0.6f;
+                currentAnimator = waveNightLowAnimator;
                 difficulty = 1;
                 globalLight.intensity = 0.3f;
                 campfireLit = true;
@@ -266,6 +266,20 @@ public class GameManager : MonoBehaviour
                     waveNightHigh.SetActive(false);
                     currentAnimator = waveNightLowAnimator;
                 }
+                else if (PlayerPrefs.GetInt("_level") == 1)
+                {
+                    waveDawnLow.SetActive(true);
+                    waveDawn.SetActive(false);
+                    waveDawnHigh.SetActive(false);
+                    currentAnimator = waveDawnLowAnimator;
+                }
+                else if (PlayerPrefs.GetInt("_level") == 2)
+                {
+                    waveNoonLow.SetActive(true);
+                    waveNoon.SetActive(false);
+                    waveNoonHigh.SetActive(false);
+                    currentAnimator = waveNoonLowAnimator;
+                }
             }
             else if (waveHeight > 33 && waveHeight <= 66)
             {
@@ -276,6 +290,20 @@ public class GameManager : MonoBehaviour
                     waveNightHigh.SetActive(false);
                     currentAnimator = waveNightAnimator;
                 }
+                else if (PlayerPrefs.GetInt("_level") == 1)
+                {
+                    waveDawnLow.SetActive(false);
+                    waveDawn.SetActive(true);
+                    waveDawnHigh.SetActive(false);
+                    currentAnimator = waveDawnAnimator;
+                }
+                else if (PlayerPrefs.GetInt("_level") == 2)
+                {
+                    waveNoonLow.SetActive(false);
+                    waveNoon.SetActive(true);
+                    waveNoonHigh.SetActive(false);
+                    currentAnimator = waveNoonAnimator;
+                }
             }
             else if (waveHeight > 66)
             {
@@ -285,6 +313,20 @@ public class GameManager : MonoBehaviour
                     waveNight.SetActive(false);
                     waveNightHigh.SetActive(true);
                     currentAnimator = waveNightHighAnimator;
+                }
+                else if (PlayerPrefs.GetInt("_level") == 1)
+                {
+                    waveDawnLow.SetActive(false);
+                    waveDawn.SetActive(false);
+                    waveDawnHigh.SetActive(true);
+                    currentAnimator = waveDawnHighAnimator;
+                }
+                else if (PlayerPrefs.GetInt("_level") == 2)
+                {
+                    waveNoonLow.SetActive(false);
+                    waveNoon.SetActive(false);
+                    waveNoonHigh.SetActive(true);
+                    currentAnimator = waveNoonHighAnimator;
                 }
             }
         }
@@ -417,16 +459,33 @@ public class GameManager : MonoBehaviour
     }
     void WaveSpeed(float value)
     {
-        if (waveDawn.activeSelf)
-            waveDawnAnimator.speed = 0.6f + (value * 0.006f);
-        else if (waveNoon.activeSelf)
-            waveNoonAnimator.speed = 0.6f + (value * 0.006f);
-        else if (waveNightLow.activeSelf)
-            waveNightLowAnimator.speed = 0.6f + (value * 0.006f);
-        else if (waveNight.activeSelf)
-            waveNightAnimator.speed = 0.6f + (value * 0.006f);
-        else if (waveNightHigh.activeSelf)
-            waveNightHighAnimator.speed = 0.6f + (value * 0.006f);
+        if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+        {
+            if (waveNightLow.activeSelf)
+                waveNightLowAnimator.speed = 0.6f + (value * 0.006f);
+            else if (waveNight.activeSelf)
+                waveNightAnimator.speed = 0.6f + (value * 0.006f);
+            else if (waveNightHigh.activeSelf)
+                waveNightHighAnimator.speed = 0.6f + (value * 0.006f);
+        }
+        else if (PlayerPrefs.GetInt("_level") == 1)
+        {
+            if (waveDawnLow.activeSelf)
+                waveDawnLowAnimator.speed = 0.6f + (value * 0.006f);
+            else if (waveDawn.activeSelf)
+                waveDawnAnimator.speed = 0.6f + (value * 0.006f);
+            else if (waveDawnHigh.activeSelf)
+                waveDawnHighAnimator.speed = 0.6f + (value * 0.006f);
+        }
+        else if (PlayerPrefs.GetInt("_level") == 2)
+        {
+            if (waveNoonLow.activeSelf)
+                waveNoonLowAnimator.speed = 0.6f + (value * 0.006f);
+            else if (waveNoon.activeSelf)
+                waveNoonAnimator.speed = 0.6f + (value * 0.006f);
+            else if (waveNoonHigh.activeSelf)
+                waveNoonHighAnimator.speed = 0.6f + (value * 0.006f);
+        }
     }
     void FallingAsleep()
     {
