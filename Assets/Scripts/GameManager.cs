@@ -264,6 +264,7 @@ public class GameManager : MonoBehaviour
                     waveNightLow.SetActive(true);
                     waveNight.SetActive(false);
                     waveNightHigh.SetActive(false);
+                    WaveSpeed(frequency);
                     currentAnimator = waveNightLowAnimator;
                 }
                 else if (PlayerPrefs.GetInt("_level") == 1)
@@ -271,6 +272,7 @@ public class GameManager : MonoBehaviour
                     waveDawnLow.SetActive(true);
                     waveDawn.SetActive(false);
                     waveDawnHigh.SetActive(false);
+                    WaveSpeed(frequency);
                     currentAnimator = waveDawnLowAnimator;
                 }
                 else if (PlayerPrefs.GetInt("_level") == 2)
@@ -278,6 +280,7 @@ public class GameManager : MonoBehaviour
                     waveNoonLow.SetActive(true);
                     waveNoon.SetActive(false);
                     waveNoonHigh.SetActive(false);
+                    WaveSpeed(frequency);
                     currentAnimator = waveNoonLowAnimator;
                 }
             }
@@ -288,6 +291,7 @@ public class GameManager : MonoBehaviour
                     waveNightLow.SetActive(false);
                     waveNight.SetActive(true);
                     waveNightHigh.SetActive(false);
+                    WaveSpeed(frequency);
                     currentAnimator = waveNightAnimator;
                 }
                 else if (PlayerPrefs.GetInt("_level") == 1)
@@ -295,6 +299,7 @@ public class GameManager : MonoBehaviour
                     waveDawnLow.SetActive(false);
                     waveDawn.SetActive(true);
                     waveDawnHigh.SetActive(false);
+                    WaveSpeed(frequency);
                     currentAnimator = waveDawnAnimator;
                 }
                 else if (PlayerPrefs.GetInt("_level") == 2)
@@ -302,6 +307,7 @@ public class GameManager : MonoBehaviour
                     waveNoonLow.SetActive(false);
                     waveNoon.SetActive(true);
                     waveNoonHigh.SetActive(false);
+                    WaveSpeed(frequency);
                     currentAnimator = waveNoonAnimator;
                 }
             }
@@ -312,6 +318,7 @@ public class GameManager : MonoBehaviour
                     waveNightLow.SetActive(false);
                     waveNight.SetActive(false);
                     waveNightHigh.SetActive(true);
+                    WaveSpeed(frequency);
                     currentAnimator = waveNightHighAnimator;
                 }
                 else if (PlayerPrefs.GetInt("_level") == 1)
@@ -319,6 +326,7 @@ public class GameManager : MonoBehaviour
                     waveDawnLow.SetActive(false);
                     waveDawn.SetActive(false);
                     waveDawnHigh.SetActive(true);
+                    WaveSpeed(frequency);
                     currentAnimator = waveDawnHighAnimator;
                 }
                 else if (PlayerPrefs.GetInt("_level") == 2)
@@ -326,6 +334,7 @@ public class GameManager : MonoBehaviour
                     waveNoonLow.SetActive(false);
                     waveNoon.SetActive(false);
                     waveNoonHigh.SetActive(true);
+                    WaveSpeed(frequency);
                     currentAnimator = waveNoonHighAnimator;
                 }
             }
