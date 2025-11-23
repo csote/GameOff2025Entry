@@ -154,8 +154,7 @@ public class GameManager : MonoBehaviour
                 musicPlaying = false;
                 raining = false;
                 windForce = 10;
-                ChangeSpots(50, 50);
-                permitted = false;
+                StartCoroutine(ChangeSpots(50, 50));
                 break;
             case 1:
                 he.SetActive(false);
@@ -170,6 +169,7 @@ public class GameManager : MonoBehaviour
                 musicPlaying = true;
                 raining = true;
                 windForce = 6;
+                StartCoroutine(ChangeSpots(Random.Range(10, 101), Random.Range(10, 101), true));
                 break;
             case 2:
                 he.SetActive(true);
@@ -183,6 +183,7 @@ public class GameManager : MonoBehaviour
                 musicPlaying = true;
                 raining = false;
                 windForce = 3;
+                StartCoroutine(ChangeSpots(Random.Range(10, 101), Random.Range(10, 101), true));
                 break;
             case 3:
                 he.SetActive(true);
@@ -197,6 +198,7 @@ public class GameManager : MonoBehaviour
                 musicPlaying = true;
                 raining = true;
                 windForce = 12;
+                StartCoroutine(ChangeSpots(Random.Range(10, 101), Random.Range(10, 101), true));
                 break;
             default:
                 break;
@@ -223,6 +225,7 @@ public class GameManager : MonoBehaviour
         speaking = false;
         choosing = false;
         choice = false;
+        permitted = false;
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
@@ -603,16 +606,14 @@ public class GameManager : MonoBehaviour
                 //! More dialogue including personal preferences
                 break;
             case 1: //* She wonders about the man that laid here before her
+                //* Dialogue before level starts
+                permitted = true;
                 StartCoroutine(Speak("Lorem ipsum", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("dolor sit", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("amet consectetur", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("adipiscing elit", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 2: //* The man visits her
+                //* Dialogue before level starts
+                permitted = true;
                 StartCoroutine(Speak("He: Hi.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("She: Hey.", waitTime, textSpeed));
@@ -642,6 +643,8 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case 3:
+                //* Dialogue before level starts
+                permitted = true;
                 switch (PlayerPrefs.GetInt("_relationship"))
                 {
                     case 0:
@@ -812,10 +815,16 @@ public class GameManager : MonoBehaviour
     {
         musicPlaying = true;
     }
-    void ChangeSpots(float waveHeight, float frequency)
+    IEnumerator ChangeSpots(float waveHeight, float frequency, bool again = false)
     {
         waveHeightSpot = waveHeight;
         frequencySpot = frequency;
+        if (again)
+        {
+            yield return _waitForSeconds30;
+            yield return new WaitUntil(() => permitted);
+            StartCoroutine(ChangeSpots(Random.Range(10, 101), Random.Range(10, 101)));
+        }
     }
     IEnumerator Wind()
     {
@@ -826,7 +835,7 @@ public class GameManager : MonoBehaviour
         frequency += wind;
         StartCoroutine(Wind());
     }
-    public IEnumerator FadeIn(GameObject objectToFade, int cooldown, float maxStep = 255, bool isImage = true) //*1-3-5-15-17-51-85-255
+    public IEnumerator FadeIn(GameObject objectToFade, int cooldown, float maxStep = 255, bool isImage = true)
     {
         float alpha = 0;
         float step = maxStep / cooldown;
