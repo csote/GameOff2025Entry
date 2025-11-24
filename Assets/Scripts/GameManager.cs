@@ -27,8 +27,9 @@ public class GameManager : MonoBehaviour
     #region Variables
     float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime, maxWHF, windForce;
     int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
-    bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted;
+    bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted, fireOut, flag1;
     string direction;
+    float currentWaveCurrentFrame = 0;
     Animator currentAnimator;
     #endregion
 
@@ -45,8 +46,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject waveNoon;
     [SerializeField] GameObject waveNoonHigh;
     [SerializeField] GameObject waveNightLow;
+    [SerializeField] GameObject waveNightLowFireless;
     [SerializeField] GameObject waveNight;
+    [SerializeField] GameObject waveNightFireless;
     [SerializeField] GameObject waveNightHigh;
+    [SerializeField] GameObject waveNightHighFireless;
     [SerializeField] Animator waveDawnLowAnimator;
     [SerializeField] Animator waveDawnAnimator;
     [SerializeField] Animator waveDawnHighAnimator;
@@ -54,12 +58,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animator waveNoonAnimator;
     [SerializeField] Animator waveNoonHighAnimator;
     [SerializeField] Animator waveNightLowAnimator;
+    [SerializeField] Animator waveNightLowFirelessAnimator;
     [SerializeField] Animator waveNightAnimator;
+    [SerializeField] Animator waveNightFirelessAnimator;
     [SerializeField] Animator waveNightHighAnimator;
-    [SerializeField] GameObject campfire;
+    [SerializeField] Animator waveNightHighFirelessAnimator;
     [SerializeField] GameObject campfireLight;
-    [SerializeField] GameObject boombox;
-    [SerializeField] Sprite fireless;
+    [SerializeField] GameObject campfireButton;
+    [SerializeField] GameObject boomboxButton;
     [SerializeField] Sprite broken;
     [SerializeField] Image whfFill;
     [SerializeField] Image campfireRiskFill;
@@ -226,6 +232,8 @@ public class GameManager : MonoBehaviour
         choosing = false;
         choice = false;
         permitted = false;
+        fireOut = false;
+        flag1 = true;
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
@@ -256,7 +264,7 @@ public class GameManager : MonoBehaviour
     }
     void ChangeWaveType()
     {
-        var currentWaveCurrentFrame = currentAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length * (currentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1) * currentAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.frameRate;
+        currentWaveCurrentFrame = currentAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.length * (currentAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime % 1) * currentAnimator.GetCurrentAnimatorClipInfo(0)[0].clip.frameRate;
 
         if (currentWaveCurrentFrame < 1)
         {
@@ -264,11 +272,39 @@ public class GameManager : MonoBehaviour
             {
                 if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
                 {
-                    waveNightLow.SetActive(true);
-                    waveNight.SetActive(false);
-                    waveNightHigh.SetActive(false);
-                    WaveSpeed(frequency);
-                    currentAnimator = waveNightLowAnimator;
+                    if (fireOut)
+                    {
+                        if (flag1)
+                        {
+                            flag1 = false;
+                            campfireRiskFloor = 0;
+                            campfireRisk = 0;
+                            campfireRiskFill.fillAmount = 0;
+                            campfireLit = false;
+                            campfireLight.SetActive(false);
+                            campfireButton.GetComponent<Button>().interactable = true;
+                            sleepiness -= 20;
+                        }
+                        waveNightLow.SetActive(false);
+                        waveNightLowFireless.SetActive(true);
+                        waveNight.SetActive(false);
+                        waveNightFireless.SetActive(false);
+                        waveNightHigh.SetActive(false);
+                        waveNightHighFireless.SetActive(false);
+                        WaveSpeed(frequency);
+                        currentAnimator = waveNightLowFirelessAnimator;
+                    }
+                    else
+                    {
+                        waveNightLow.SetActive(true);
+                        waveNightLowFireless.SetActive(false);
+                        waveNight.SetActive(false);
+                        waveNightFireless.SetActive(false);
+                        waveNightHigh.SetActive(false);
+                        waveNightHighFireless.SetActive(false);
+                        WaveSpeed(frequency);
+                        currentAnimator = waveNightLowAnimator;
+                    }
                 }
                 else if (PlayerPrefs.GetInt("_level") == 1)
                 {
@@ -291,11 +327,39 @@ public class GameManager : MonoBehaviour
             {
                 if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
                 {
-                    waveNightLow.SetActive(false);
-                    waveNight.SetActive(true);
-                    waveNightHigh.SetActive(false);
-                    WaveSpeed(frequency);
-                    currentAnimator = waveNightAnimator;
+                    if (fireOut)
+                    {
+                        if (flag1)
+                        {
+                            flag1 = false;
+                            campfireRiskFloor = 0;
+                            campfireRisk = 0;
+                            campfireRiskFill.fillAmount = 0;
+                            campfireLit = false;
+                            campfireLight.SetActive(false);
+                            campfireButton.GetComponent<Button>().interactable = true;
+                            sleepiness -= 20;
+                        }
+                        waveNightLow.SetActive(false);
+                        waveNightLowFireless.SetActive(false);
+                        waveNight.SetActive(false);
+                        waveNightFireless.SetActive(true);
+                        waveNightHigh.SetActive(false);
+                        waveNightHighFireless.SetActive(false);
+                        WaveSpeed(frequency);
+                        currentAnimator = waveNightFirelessAnimator;
+                    }
+                    else
+                    {
+                        waveNightLow.SetActive(false);
+                        waveNightLowFireless.SetActive(false);
+                        waveNight.SetActive(true);
+                        waveNightFireless.SetActive(false);
+                        waveNightHigh.SetActive(false);
+                        waveNightHighFireless.SetActive(false);
+                        WaveSpeed(frequency);
+                        currentAnimator = waveNightAnimator;
+                    }
                 }
                 else if (PlayerPrefs.GetInt("_level") == 1)
                 {
@@ -318,11 +382,39 @@ public class GameManager : MonoBehaviour
             {
                 if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
                 {
-                    waveNightLow.SetActive(false);
-                    waveNight.SetActive(false);
-                    waveNightHigh.SetActive(true);
-                    WaveSpeed(frequency);
-                    currentAnimator = waveNightHighAnimator;
+                    if (fireOut)
+                    {
+                        if (flag1)
+                        {
+                            flag1 = false;
+                            campfireRiskFloor = 0;
+                            campfireRisk = 0;
+                            campfireRiskFill.fillAmount = 0;
+                            campfireLit = false;
+                            campfireLight.SetActive(false);
+                            campfireButton.GetComponent<Button>().interactable = true;
+                            sleepiness -= 20;
+                        }
+                        waveNightLow.SetActive(false);
+                        waveNightLowFireless.SetActive(false);
+                        waveNight.SetActive(false);
+                        waveNightFireless.SetActive(false);
+                        waveNightHigh.SetActive(false);
+                        waveNightHighFireless.SetActive(true);
+                        WaveSpeed(frequency);
+                        currentAnimator = waveNightHighFirelessAnimator;
+                    }
+                    else
+                    {
+                        waveNightLow.SetActive(false);
+                        waveNightLowFireless.SetActive(false);
+                        waveNight.SetActive(false);
+                        waveNightFireless.SetActive(false);
+                        waveNightHigh.SetActive(true);
+                        waveNightHighFireless.SetActive(false);
+                        WaveSpeed(frequency);
+                        currentAnimator = waveNightHighAnimator;
+                    }
                 }
                 else if (PlayerPrefs.GetInt("_level") == 1)
                 {
@@ -773,21 +865,21 @@ public class GameManager : MonoBehaviour
         }
 
         if (campfireRisk >= 100)
-        {
-            campfireRiskFloor = 0;
-            campfireRisk = 0;
-            campfireRiskFill.fillAmount = 0;
-            campfireLit = false;
-            campfireLight.SetActive(false);
-            campfire.GetComponent<Image>().sprite = fireless;
-            campfire.GetComponent<Button>().interactable = true;
-            sleepiness -= 20;
-        }
+            fireOut = true;
+        yield return new WaitUntil(() => !fireOut);
         StartCoroutine(CampfireCheck());
     }
     public void LightCampfire()
     {
+        StartCoroutine(LightingFire());
+    }
+    IEnumerator LightingFire()
+    {
+        yield return new WaitUntil(() => currentWaveCurrentFrame < 1);
         campfireLit = true;
+        campfireLight.SetActive(true);
+        fireOut = false;
+        flag1 = true;
     }
     IEnumerator BoomboxCheck()
     {
@@ -805,8 +897,8 @@ public class GameManager : MonoBehaviour
             boomboxRisk = 0;
             boomboxRiskFill.fillAmount = 0;
             musicPlaying = false;
-            boombox.GetComponent<Image>().sprite = broken;
-            boombox.GetComponent<Button>().interactable = true;
+            boomboxButton.GetComponent<Image>().sprite = broken;
+            boomboxButton.GetComponent<Button>().interactable = true;
             sleepiness -= 20;
         }
         StartCoroutine(BoomboxCheck());
