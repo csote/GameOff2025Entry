@@ -1,9 +1,10 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal; //* For Light2D
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Audio;
+using UnityEngine.SceneManagement;
+using UnityEngine.Rendering.Universal; //* For Light2D
 
 public class GameManager : MonoBehaviour
 {
@@ -78,6 +79,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject fade;
     [SerializeField] Slider sleepinessBar;
     [SerializeField] TextMeshProUGUI dynamicText;
+
+    [SerializeField] AudioSource waveAudio;
+    [SerializeField] AudioSource crackling;
+    [SerializeField] AudioSource flint;
+    [SerializeField] AudioSource extinguish;
 
     [HideInInspector] public bool paused;
     #endregion
@@ -161,6 +167,7 @@ public class GameManager : MonoBehaviour
                 raining = false;
                 windForce = 10;
                 StartCoroutine(ChangeSpots(50, 50));
+                crackling.Play();
                 break;
             case 1:
                 he.SetActive(false);
@@ -205,6 +212,7 @@ public class GameManager : MonoBehaviour
                 raining = true;
                 windForce = 12;
                 StartCoroutine(ChangeSpots(Random.Range(10, 101), Random.Range(10, 101), true));
+                crackling.Play();
                 break;
             default:
                 break;
@@ -212,8 +220,8 @@ public class GameManager : MonoBehaviour
 
         sleepiness = 50;
         sleepinessBar.value = sleepiness;
-        waveHeight = 10;
-        frequency = 10;
+        waveHeight = 0;
+        frequency = 0;
         wind = 0;
         leeway = 10;
         campfireRisk = 0;
@@ -247,6 +255,18 @@ public class GameManager : MonoBehaviour
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             paused = !paused;
             Time.timeScale = paused ? 0 : 1;
+            if (paused)
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                    crackling.Pause();
+                waveAudio.Pause();
+            }
+            else
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                    crackling.UnPause();
+                waveAudio.UnPause();
+            }
         }
     }
     void UpdateUI()
@@ -283,6 +303,8 @@ public class GameManager : MonoBehaviour
                             campfireLit = false;
                             campfireLight.SetActive(false);
                             campfireButton.GetComponent<Button>().interactable = true;
+                            crackling.Stop();
+                            extinguish.Play();
                             sleepiness -= 20;
                         }
                         waveNightLow.SetActive(false);
@@ -338,6 +360,8 @@ public class GameManager : MonoBehaviour
                             campfireLit = false;
                             campfireLight.SetActive(false);
                             campfireButton.GetComponent<Button>().interactable = true;
+                            crackling.Stop();
+                            extinguish.Play();
                             sleepiness -= 20;
                         }
                         waveNightLow.SetActive(false);
@@ -393,6 +417,8 @@ public class GameManager : MonoBehaviour
                             campfireLit = false;
                             campfireLight.SetActive(false);
                             campfireButton.GetComponent<Button>().interactable = true;
+                            crackling.Stop();
+                            extinguish.Play();
                             sleepiness -= 20;
                         }
                         waveNightLow.SetActive(false);
@@ -563,33 +589,8 @@ public class GameManager : MonoBehaviour
     }
     void WaveSpeed(float value)
     {
-        if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
-        {
-            if (waveNightLow.activeSelf)
-                waveNightLowAnimator.speed = 0.6f + (value * 0.006f);
-            else if (waveNight.activeSelf)
-                waveNightAnimator.speed = 0.6f + (value * 0.006f);
-            else if (waveNightHigh.activeSelf)
-                waveNightHighAnimator.speed = 0.6f + (value * 0.006f);
-        }
-        else if (PlayerPrefs.GetInt("_level") == 1)
-        {
-            if (waveDawnLow.activeSelf)
-                waveDawnLowAnimator.speed = 0.6f + (value * 0.006f);
-            else if (waveDawn.activeSelf)
-                waveDawnAnimator.speed = 0.6f + (value * 0.006f);
-            else if (waveDawnHigh.activeSelf)
-                waveDawnHighAnimator.speed = 0.6f + (value * 0.006f);
-        }
-        else if (PlayerPrefs.GetInt("_level") == 2)
-        {
-            if (waveNoonLow.activeSelf)
-                waveNoonLowAnimator.speed = 0.6f + (value * 0.006f);
-            else if (waveNoon.activeSelf)
-                waveNoonAnimator.speed = 0.6f + (value * 0.006f);
-            else if (waveNoonHigh.activeSelf)
-                waveNoonHighAnimator.speed = 0.6f + (value * 0.006f);
-        }
+        currentAnimator.speed = 0.6f + (value * 0.006f);
+        waveAudio.pitch = 1 + (value / 100);
     }
     void FallingAsleep()
     {
@@ -878,6 +879,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => currentWaveCurrentFrame < 1);
         campfireLit = true;
         campfireLight.SetActive(true);
+        flint.Play();
+        crackling.Play();
         fireOut = false;
         flag1 = true;
     }
