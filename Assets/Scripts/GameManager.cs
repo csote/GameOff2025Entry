@@ -602,18 +602,18 @@ public class GameManager : MonoBehaviour
                 lost = true;
                 sleepiness = 0;
                 if (PlayerPrefs.GetInt("_relationship") == 1)
-                    StartCoroutine(WinSpecial());
+                    LoadEnding(1);
                 else if (PlayerPrefs.GetInt("_relationship") == 2)
-                    StartCoroutine(LoseSpecial());
+                    LoadEnding(2);
             }
             else if (sleepiness >= 100 && !won)
             {
                 won = true;
                 sleepiness = 100;
                 if (PlayerPrefs.GetInt("_relationship") == 1)
-                    StartCoroutine(LoseSpecial());
+                    LoadEnding(3);
                 else if (PlayerPrefs.GetInt("_relationship") == 2)
-                    StartCoroutine(WinSpecial());
+                    LoadEnding(4);
             }
         }
         else
@@ -829,17 +829,10 @@ public class GameManager : MonoBehaviour
         StartCoroutine(FadeIn(fade, 51));
         Invoke(nameof(Necessary2), 1);
     }
-    IEnumerator LoseSpecial()
+    void LoadEnding(int ending)
     {
-        PlayerPrefs.SetInt("_ending", 1);
+        PlayerPrefs.SetInt("_ending", ending);
         SceneManager.LoadScene("Endings");
-        yield return null;
-    }
-    IEnumerator WinSpecial()
-    {
-        PlayerPrefs.SetInt("_ending", 2);
-        SceneManager.LoadScene("Endings");
-        yield return null;
     }
     void WaveHeightCheck()
     {
