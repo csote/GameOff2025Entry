@@ -4763,8 +4763,6 @@ MonoBehaviour:
   wind: {fileID: 1151534164}
   campfireRisk: {fileID: 1599915271}
   campfireRiskFill: {fileID: 1147730618}
-  boomboxRisk: {fileID: 0}
-  boomboxRiskFill: {fileID: 0}
   controlImages:
   - {fileID: 1025460936}
   - {fileID: 1248671406}
@@ -4780,8 +4778,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: b795482116b92bb43aca4249abf1fc1f, type: 3}
   - {fileID: 21300000, guid: 8d9a1ca9e5de54649853a2fa758ea98f, type: 3}
   - {fileID: 21300000, guid: 385e3731b4df0504f9b14516728ec888, type: 3}
-  - {fileID: 21300000, guid: b795482116b92bb43aca4249abf1fc1f, type: 3}
-  - {fileID: 21300000, guid: 8d9a1ca9e5de54649853a2fa758ea98f, type: 3}
   sprites2:
   - {fileID: 21300000, guid: e20369ff554de2f47830953287f5187d, type: 3}
   - {fileID: 21300000, guid: 3a3e8d8148f74904a92b24751576a53d, type: 3}
@@ -4794,8 +4790,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 39782940fe553a542a49b5a7e66ad0b6, type: 3}
   - {fileID: 21300000, guid: 48d95f632eb2b80439bdae3f01f53f73, type: 3}
   - {fileID: 21300000, guid: 5641dbc422df7bf4ca92f83be9276d74, type: 3}
-  - {fileID: 21300000, guid: 39782940fe553a542a49b5a7e66ad0b6, type: 3}
-  - {fileID: 21300000, guid: 48d95f632eb2b80439bdae3f01f53f73, type: 3}
   sprites3:
   - {fileID: 21300000, guid: 4abd3c722e8a91b458a69dda862fa097, type: 3}
   - {fileID: 21300000, guid: 2349063bb09cff442b53c72ae717938d, type: 3}
@@ -4808,8 +4802,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 77776d2117bd8ae42866cc0e93125393, type: 3}
   - {fileID: 21300000, guid: 5751525f41b1fd64a916687aa10789d4, type: 3}
   - {fileID: 21300000, guid: bf8ff63cc0f133147840ff59308f96ef, type: 3}
-  - {fileID: 21300000, guid: 77776d2117bd8ae42866cc0e93125393, type: 3}
-  - {fileID: 21300000, guid: 5751525f41b1fd64a916687aa10789d4, type: 3}
   pauseMenuBG: {fileID: 182428536}
 --- !u!114 &627226812
 MonoBehaviour:
