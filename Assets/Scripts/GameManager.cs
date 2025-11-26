@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
     #region Variables
     float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime, maxWHF, windForce;
-    int campfireRisk, boomboxRisk, campfireRiskFloor, boomboxRiskFloor, factorsCorrect;
+    int campfireRisk, campfireRiskFloor, factorsCorrect;
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted, fireOut, flag1;
     string direction;
     float currentWaveCurrentFrame = 0;
@@ -226,8 +226,6 @@ public class GameManager : MonoBehaviour
         leeway = 10;
         campfireRisk = 0;
         campfireRiskFloor = 0;
-        boomboxRisk = 0;
-        boomboxRiskFloor = 0;
         factorsCorrect = 0;
         waveHeightCorrect = false;
         frequencyCorrect = false;
@@ -245,7 +243,6 @@ public class GameManager : MonoBehaviour
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
-        StartCoroutine(BoomboxCheck());
         StartCoroutine(Dialogue(index));
     }
     void MenuCheck()
@@ -876,32 +873,6 @@ public class GameManager : MonoBehaviour
         crackling.Play();
         fireOut = false;
         flag1 = true;
-    }
-    IEnumerator BoomboxCheck()
-    {
-        yield return _waitForSeconds1;
-        if (frequency >= 80 && musicPlaying)
-        {
-            boomboxRisk = Random.Range(boomboxRiskFloor, 101);
-            boomboxRiskFloor++;
-            boomboxRiskFill.fillAmount = boomboxRiskFloor / 100f;
-        }
-
-        if (boomboxRisk >= 100)
-        {
-            boomboxRiskFloor = 0;
-            boomboxRisk = 0;
-            boomboxRiskFill.fillAmount = 0;
-            musicPlaying = false;
-            boomboxButton.GetComponent<Image>().sprite = broken;
-            boomboxButton.GetComponent<Button>().interactable = true;
-            sleepiness -= 20;
-        }
-        StartCoroutine(BoomboxCheck());
-    }
-    public void RepairBoombox()
-    {
-        musicPlaying = true;
     }
     IEnumerator ChangeSpots(float waveHeight, float frequency, bool again = false)
     {
