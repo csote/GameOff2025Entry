@@ -828,7 +828,13 @@ public class GameManager : MonoBehaviour
     }
     void LoadEnding(int ending)
     {
+        fade.SetActive(true);
+        StartCoroutine(FadeIn(fade, 51));
         PlayerPrefs.SetInt("_ending", ending);
+        Invoke(nameof(Necessary3), 1);
+    }
+    void Necessary3()
+    {
         SceneManager.LoadScene("Endings");
     }
     void WaveHeightCheck()
