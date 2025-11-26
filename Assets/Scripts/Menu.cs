@@ -42,6 +42,8 @@ public class Menu : MonoBehaviour
     [SerializeField] Image wind;
     [SerializeField] Image campfireRisk;
     [SerializeField] Image campfireRiskFill;
+    [SerializeField] Image windFillLeft;
+    [SerializeField] Image windFillRight;
     [SerializeField] Image[] controlImages;
     [SerializeField] Sprite[] sprites1;
     [SerializeField] Sprite[] sprites2;
@@ -238,6 +240,8 @@ public class Menu : MonoBehaviour
                 campfireRisk.sprite = sprites1[8];
                 campfireRiskFill.sprite = sprites1[9];
                 wind.sprite = sprites1[10];
+                windFillLeft.sprite = sprites1[11];
+                windFillRight.sprite = sprites1[12];
             }
             foreach (Image image in images1)
                 image.sprite = sprites1[1];
@@ -258,6 +262,8 @@ public class Menu : MonoBehaviour
                 campfireRisk.sprite = sprites2[8];
                 campfireRiskFill.sprite = sprites2[9];
                 wind.sprite = sprites2[10];
+                windFillLeft.sprite = sprites2[11];
+                windFillRight.sprite = sprites2[12];
             }
             foreach (Image image in images1)
                 image.sprite = sprites2[1];
@@ -278,6 +284,8 @@ public class Menu : MonoBehaviour
                 campfireRisk.sprite = sprites3[8];
                 campfireRiskFill.sprite = sprites3[9];
                 wind.sprite = sprites3[10];
+                windFillLeft.sprite = sprites3[11];
+                windFillRight.sprite = sprites3[12];
             }
             foreach (Image image in images1)
                 image.sprite = sprites3[1];

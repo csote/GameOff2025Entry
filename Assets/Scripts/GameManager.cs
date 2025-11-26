@@ -66,11 +66,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animator waveNightHighFirelessAnimator;
     [SerializeField] GameObject campfireLight;
     [SerializeField] GameObject campfireButton;
-    [SerializeField] GameObject boomboxButton;
-    [SerializeField] Sprite broken;
     [SerializeField] Image whfFill;
     [SerializeField] Image campfireRiskFill;
-    [SerializeField] Image boomboxRiskFill;
+    [SerializeField] Image windFillLeft;
+    [SerializeField] Image windFillRight;
 
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
@@ -210,7 +209,7 @@ public class GameManager : MonoBehaviour
                 campfireLight.SetActive(true);
                 musicPlaying = true;
                 raining = true;
-                windForce = 12;
+                windForce = 10;
                 StartCoroutine(ChangeSpots(Random.Range(10, 101), Random.Range(10, 101), true));
                 crackling.Play();
                 break;
@@ -896,6 +895,20 @@ public class GameManager : MonoBehaviour
         yield return new WaitUntil(() => started);
         yield return _waitForSeconds10;
         wind = Random.Range(-windForce, windForce);
+
+        if (wind < 0)
+        {
+            windFillLeft.gameObject.SetActive(true);
+            windFillLeft.fillAmount = wind / 10;
+            windFillRight.gameObject.SetActive(false);
+        }
+        else
+        {
+            windFillLeft.gameObject.SetActive(false);
+            windFillRight.gameObject.SetActive(true);
+            windFillRight.fillAmount = wind / 10;
+        }
+
         waveHeight += wind;
         frequency += wind;
         StartCoroutine(Wind());
