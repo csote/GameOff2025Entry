@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -32,6 +33,7 @@ public class GameManager : MonoBehaviour
     string direction;
     float currentWaveCurrentFrame = 0;
     Animator currentAnimator;
+    List<AudioClip> songs;
     #endregion
 
     #region SerializeField
@@ -83,6 +85,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] AudioSource crackling;
     [SerializeField] AudioSource flint;
     [SerializeField] AudioSource extinguish;
+    [SerializeField] AudioSource musicPlayer;
+    [SerializeField] AudioClip song1;
+    [SerializeField] AudioClip song2;
+    [SerializeField] AudioClip song3;
+    [SerializeField] AudioClip song4;
+    [SerializeField] AudioClip song5;
+    [SerializeField] AudioClip song6;
 
     [HideInInspector] public bool paused;
     #endregion
@@ -110,6 +119,7 @@ public class GameManager : MonoBehaviour
             Invoke(nameof(Necessary), 0.51f);
             menuScript = GetComponent<Menu>();
             menuScript.ControlImageSwitcher(menuScript.currentPalette);
+            songs = new List<AudioClip> { song1, song2, song3, song4, song5, song6 };
             InitValues(PlayerPrefs.GetInt("_level"));
         }
     }
@@ -219,30 +229,26 @@ public class GameManager : MonoBehaviour
 
         sleepiness = 50;
         sleepinessBar.value = sleepiness;
-        waveHeight = 0;
-        frequency = 0;
-        wind = 0;
-        leeway = 10;
-        campfireRisk = 0;
-        campfireRiskFloor = 0;
-        factorsCorrect = 0;
-        waveHeightCorrect = false;
-        frequencyCorrect = false;
-        won = false;
-        lost = false;
-        paused = false;
+        waveHeight = 0; frequency = 0; wind = 0; leeway = 10; campfireRisk = 0; campfireRiskFloor = 0; factorsCorrect = 0;
         Time.timeScale = 1;
-        started = false;
-        speaking = false;
-        choosing = false;
-        choice = false;
-        permitted = false;
-        fireOut = false;
-        flag1 = true;
+        waveHeightCorrect = false; frequencyCorrect = false; won = false; lost = false; paused = false; started = false; speaking = false; choosing = false; choice = false; permitted = false; fireOut = false; flag1 = true;
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
         StartCoroutine(Dialogue(index));
+        StartCoroutine(PlayMusic());
+    }
+    IEnumerator PlayMusic()
+    {
+        if (songs.Count == 0)
+            songs = new List<AudioClip> { song1, song2, song3, song4, song5, song6 };
+        int index = Random.Range(0, songs.Count);
+        musicPlayer.clip = songs[index];
+        musicPlayer.Play();
+        songs.Remove(songs[index]);
+        yield return new WaitUntil(() => !musicPlayer.isPlaying);
+        yield return new WaitForSeconds(5);
+        StartCoroutine(PlayMusic());
     }
     void MenuCheck()
     {
