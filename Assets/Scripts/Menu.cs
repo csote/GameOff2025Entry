@@ -1,9 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.Audio;
-using UnityEngine.SceneManagement;
+using UnityEngine; using UnityEngine.UI; using UnityEngine.Audio; using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
@@ -18,8 +15,6 @@ public class Menu : MonoBehaviour
     [SerializeField] Slider textSpeedSlider;
     [SerializeField] TextMeshProUGUI textSpeedText;
     [SerializeField] TMP_Dropdown qualityDropdown;
-    [SerializeField] TMP_Dropdown resolutionDropdown;
-    Resolution[] resolutions;
     [SerializeField] Color[] colourPalette1;
     [SerializeField] Color[] colourPalette2;
     [SerializeField] Color[] colourPalette3;
@@ -54,7 +49,6 @@ public class Menu : MonoBehaviour
     void Start()
     {
         InitValues();
-        ListResolutions();
     }
 
     void InitValues()
@@ -126,31 +120,6 @@ public class Menu : MonoBehaviour
     {
         QualitySettings.SetQualityLevel(index);
         PlayerPrefs.SetInt("_qualityLevel", index);
-    }
-    void ListResolutions()
-    {
-        resolutions = Screen.resolutions;
-        resolutionDropdown.ClearOptions();
-        List<string> options = new();
-
-        int currentIndex = 0;
-        for (int i = 0; i < resolutions.Length; i++)
-        {
-            string option = resolutions[i].width + " x " + resolutions[i].height;
-            options.Add(option);
-
-            if (resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
-                currentIndex = i;
-        }
-
-        resolutionDropdown.AddOptions(options);
-        resolutionDropdown.value = currentIndex;
-        resolutionDropdown.RefreshShownValue();
-    }
-    public void SetResolution(int index)
-    {
-        Resolution res = resolutions[index];
-        Screen.SetResolution(res.width, res.height, Screen.fullScreen);
     }
     public void ResetLevels()
     {
