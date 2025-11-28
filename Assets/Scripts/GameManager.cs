@@ -12,10 +12,6 @@ public class GameManager : MonoBehaviour
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
     #endregion
 
-    #pragma warning disable UDR0001
-    public static int textSpeed; //* Bro is contained :skullemoji:
-    #pragma warning restore UDR0001
-
     #region General
     Inputs input;
     Menu menuScript;
@@ -24,6 +20,7 @@ public class GameManager : MonoBehaviour
     #region Variables
     float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime, maxWHF, windForce;
     int campfireRisk, campfireRiskFloor, factorsCorrect;
+    [HideInInspector] public int textSpeed;
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted, fireOut, flag1;
     string direction;
     float currentWaveCurrentFrame = 0;
@@ -463,16 +460,16 @@ public class GameManager : MonoBehaviour
         switch (textSpeed)
         {
             case 16:
-                waitTime = 0.32f;
-                break;
-            case 32:
                 waitTime = 0.64f;
                 break;
-            case 64:
+            case 32:
                 waitTime = 1.28f;
                 break;
-            case 128:
+            case 64:
                 waitTime = 2.56f;
+                break;
+            case 128:
+                waitTime = 5.12f;
                 break;
         }
     }
@@ -683,32 +680,60 @@ public class GameManager : MonoBehaviour
             case 0:
                 StartCoroutine(Speak("This is nice.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("It would be nicer if these waves weren't so damn low.", waitTime * 1.5f, textSpeed));
-                yield return new WaitForSeconds(waitTime * 1.5f *  2.2f);
-                StartCoroutine(Speak("Wish someone could just slide some slider and change the height and frequency of these waves.", waitTime * 2.4f, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2.4f * 2.2f);
-                StartCoroutine(Speak("Maybe they could even try to match some indicator flashing on their screen.", waitTime * 2, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2 * 2.2f);
+                StartCoroutine(Speak("It would be nicer if these waves weren't so damn low.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wish someone could just slide some slider and change the height and frequency of these waves.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Maybe they could even try to match some indicator flashing on their screen.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
                 yield return new WaitUntil(() => waveHeightCorrect && frequencyCorrect);
                 permitted = true;
-                StartCoroutine(Speak("Ah, that's more my speed. Thank you imaginary person.", waitTime * 1.5f, textSpeed));
-                yield return new WaitForSeconds(waitTime * 1.5f * 2.2f);
+                StartCoroutine(Speak("Ah, that's more my speed. Thank you imaginary person.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
                 //! More dialogue including personal preferences
                 break;
-            case 1: //* She wonders about the man that laid here before her
-                //* Dialogue before level starts
+            case 1:
+                StartCoroutine(Speak("I'm glad I got here before it got crowded.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
                 permitted = true;
-                StartCoroutine(Speak("Lorem ipsum", waitTime, textSpeed));
+                StartCoroutine(Speak("But looks like someone was here even earlier than me.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("I wonder who they were.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Shame they left, it gets lonely at this hour of the day.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
-            case 2: //* The man visits her
-                //* Dialogue before level starts
+            case 2:
                 permitted = true;
-                StartCoroutine(Speak("He: Hi.", waitTime, textSpeed));
+                StartCoroutine(Speak("???: You are in my spot.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("She: Hey.", waitTime, textSpeed));
+                StartCoroutine(Speak("***: No way. I've been here since dawn.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("He: You like me?", waitTime, textSpeed, false));
+                StartCoroutine(Speak("???: That's because I left here at dawn.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("***: That was you? I wondered who would leave", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("right when it's the best time to be here.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("???: Well I didn't have much choice. But it doesn't matter.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("You are still in my spot.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("***: Calm down, it is big enough for both of us.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Hayden: I guess. Hayden by the way.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: Finally, a name to put on the face. I'm Wendy.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Hayden: Yeah sorry for my manners. There was someone in my spot.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: You know the beach is like, miles long right?", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Hayden: Yeah, but this is the best spot on the whole beach.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: I noticed. Something about it just draws you here.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Hayden: You wanna spend the night here as well?", waitTime, textSpeed, false));
                 choosing = true;
                 yield return new WaitForSeconds(waitTime * 1.5f);
                 StartCoroutine(PresentChoice(textSpeed));
@@ -722,13 +747,13 @@ public class GameManager : MonoBehaviour
                 if (choice)
                 {
                     PlayerPrefs.SetInt("_relationship", 1);
-                    StartCoroutine(Speak("She: Yep.", waitTime, textSpeed));
+                    StartCoroutine(Speak("Wendy: Sure.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
                 }
                 else
                 {
                     PlayerPrefs.SetInt("_relationship", 2);
-                    StartCoroutine(Speak("She: Nope.", waitTime, textSpeed));
+                    StartCoroutine(Speak("Wendy: Sorry, I need to be somewhere. I promised.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
                 }
                 break;
@@ -742,11 +767,11 @@ public class GameManager : MonoBehaviour
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                     case 1:
-                        StartCoroutine(Speak("He: Yay.", waitTime, textSpeed));
+                        StartCoroutine(Speak("Hayden: See, it's even better at night.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                     case 2:
-                        StartCoroutine(Speak("He: :(.", waitTime, textSpeed));
+                        StartCoroutine(Speak("Hayden: I thought you needed to be somewhere?.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                 }
@@ -820,20 +845,24 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Win()
     {
-        PlayerPrefs.SetInt("_level", PlayerPrefs.GetInt("_level") + 1);
         yield return new WaitUntil(() => !speaking);
         fade.SetActive(true);
         StartCoroutine(FadeIn(fade, 51));
-        Invoke(nameof(Necessary2), 1);
+        Invoke(nameof(Necessary3), 1);
+    }
+    void Necessary3()
+    {
+        PlayerPrefs.SetInt("_level", PlayerPrefs.GetInt("_level") + 1); 
+        SceneManager.LoadScene("Game");
     }
     void LoadEnding(int ending)
     {
         fade.SetActive(true);
         StartCoroutine(FadeIn(fade, 51));
         PlayerPrefs.SetInt("_ending", ending);
-        Invoke(nameof(Necessary3), 1);
+        Invoke(nameof(Necessary4), 1);
     }
-    void Necessary3()
+    void Necessary4()
     {
         SceneManager.LoadScene("Endings");
     }

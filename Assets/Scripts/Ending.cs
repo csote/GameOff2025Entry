@@ -15,13 +15,13 @@ public class Ending : MonoBehaviour
         endingText.text = "Ending: " + PlayerPrefs.GetInt("_ending") + " of 4";
         switch (PlayerPrefs.GetInt("_ending"))
         {
-            case 1:
+            case 1: //* She said yes, they stayed awake.
                 break;
-            case 2:
+            case 2: //* She said no, they stayed awake.
                 break;
-            case 3:
+            case 3: //* She said yes, they slept.
                 break;
-            case 4:
+            case 4: //* She said no, they slept.
                 break;
             case 0:
                 break;

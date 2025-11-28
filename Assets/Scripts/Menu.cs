@@ -132,22 +132,22 @@ public class Menu : MonoBehaviour
         switch (value)
         {
             case 1:
-                GameManager.textSpeed = 128;
+                gameManager.textSpeed = 128;
                 textSpeedText.text = "1 - We have places to be.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 1);
                 break;
             case 2:
-                GameManager.textSpeed = 64;
+                gameManager.textSpeed = 64;
                 textSpeedText.text = "2 - Great taste for relaxation.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 2);
                 break;
             case 3:
-                GameManager.textSpeed = 32;
+                gameManager.textSpeed = 32;
                 textSpeedText.text = "3 - What I use personally.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 3);
                 break;
             case 4:
-                GameManager.textSpeed = 16;
+                gameManager.textSpeed = 16;
                 textSpeedText.text = "4 - Fast.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 4);
                 break;
