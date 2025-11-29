@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     #region WaitForSeconds
     readonly static WaitForSeconds _waitForSeconds0_01 = new(0.01f);
     readonly static WaitForSeconds _waitForSeconds1 = new(1);
+    readonly static WaitForSeconds _waitForSeconds3 = new(3);
+    readonly static WaitForSeconds _waitForSeconds5 = new(5);
     readonly static WaitForSeconds _waitForSeconds10 = new(10);
     readonly static WaitForSeconds _waitForSeconds30 = new(30);
     #endregion
@@ -21,7 +23,7 @@ public class GameManager : MonoBehaviour
     float sleepiness, waveHeight, frequency, wind, waveHeightSpot, frequencySpot, leeway, difficulty, waitTime, maxWHF, windForce;
     int campfireRisk, campfireRiskFloor, factorsCorrect;
     [HideInInspector] public int textSpeed;
-    bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted, fireOut, flag1;
+    bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted, fireOut, flag1, musicDown;
     string direction;
     float currentWaveCurrentFrame = 0;
     Animator currentAnimator;
@@ -129,6 +131,7 @@ public class GameManager : MonoBehaviour
             FrequencyCheck();
             UpdateUI();
             ChangeWaveType();
+            MusicKiller();
             if (!paused && started && permitted)
             {
                 FactorCheck();
@@ -223,7 +226,7 @@ public class GameManager : MonoBehaviour
         sleepinessBar.value = sleepiness;
         waveHeight = 0; frequency = 0; wind = 0; leeway = 10; campfireRisk = 0; campfireRiskFloor = 0; factorsCorrect = 0;
         Time.timeScale = 1;
-        waveHeightCorrect = false; frequencyCorrect = false; won = false; lost = false; paused = false; started = false; speaking = false; choosing = false; choice = false; permitted = false; fireOut = false; flag1 = true;
+        waveHeightCorrect = false; frequencyCorrect = false; won = false; lost = false; paused = false; started = false; speaking = false; choosing = false; choice = false; permitted = false; fireOut = false; flag1 = true; musicDown = false;
         if (index != 0)
             StartCoroutine(Wind());
         StartCoroutine(CampfireCheck());
@@ -236,10 +239,11 @@ public class GameManager : MonoBehaviour
             songs = new List<AudioClip> { song1, song2, song3, song4, song5, song6 };
         int index = Random.Range(0, songs.Count);
         musicPlayer.clip = songs[index];
+        yield return _waitForSeconds3;
         musicPlayer.Play();
         songs.Remove(songs[index]);
         yield return new WaitUntil(() => !musicPlayer.isPlaying);
-        yield return new WaitForSeconds(5);
+        yield return _waitForSeconds5;
         StartCoroutine(PlayMusic());
     }
     void MenuCheck()
@@ -777,7 +781,6 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             default:
-                Debug.Log("Not a level.");
                 break;
         }
         speaking = false;
@@ -827,11 +830,21 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator Lose()
     {
-        yield return null;
+        musicDown = true;
+        yield return new WaitUntil(() => musicPlayer.pitch <= 0.01);
+        musicDown = false;
         loseMenu.SetActive(true);
         choiceButton1.SetActive(false);
         choiceButton2.SetActive(false);
         StopAllCoroutines();
+    }
+    void MusicKiller()
+    {
+        if (musicDown)
+        {
+            if (musicPlayer.pitch > 0)
+                musicPlayer.pitch -= Time.deltaTime;
+        }
     }
     public void Restart()
     {

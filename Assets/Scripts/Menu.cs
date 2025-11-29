@@ -170,7 +170,6 @@ public class Menu : MonoBehaviour
                 ColourSwitcher(colourPalette3);
                 break;
             default:
-                Debug.Log("Wtf?");
                 break;
         }
         PlayerPrefs.SetInt("_palette", index);
