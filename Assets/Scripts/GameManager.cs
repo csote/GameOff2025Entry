@@ -136,7 +136,6 @@ public class GameManager : MonoBehaviour
             {
                 FactorCheck();
                 FallingAsleep();
-                //! Crab wave chance
             }
         }
     }
@@ -882,22 +881,32 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator LoadEnding(int ending)
     {
+        yield return new WaitUntil(() => !speaking);
+        yield return _waitForSeconds3;
         switch (ending)
         {
             case 1:
-                StartCoroutine(Speak("", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: Thanks for staying awake with me.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: Sure thing.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 2:
-                StartCoroutine(Speak("", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: We should have fallen asleep ages ago.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: I wish I did.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 3:
-                StartCoroutine(Speak("", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: Good night :).", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: Good night :).", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 4:
-                StartCoroutine(Speak("", waitTime, textSpeed));
+                StartCoroutine(Speak("Wendy: Good night :(.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Hayden: Good night :(.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             default:
