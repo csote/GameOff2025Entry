@@ -600,18 +600,18 @@ public class GameManager : MonoBehaviour
                 lost = true;
                 sleepiness = 0;
                 if (PlayerPrefs.GetInt("_relationship") == 1)
-                    LoadEnding(1);
+                    StartCoroutine(LoadEnding(1));
                 else if (PlayerPrefs.GetInt("_relationship") == 2)
-                    LoadEnding(2);
+                    StartCoroutine(LoadEnding(2));
             }
             else if (sleepiness >= 100 && !won)
             {
                 won = true;
                 sleepiness = 100;
                 if (PlayerPrefs.GetInt("_relationship") == 1)
-                    LoadEnding(3);
+                    StartCoroutine(LoadEnding(3));
                 else if (PlayerPrefs.GetInt("_relationship") == 2)
-                    LoadEnding(4);
+                    StartCoroutine(LoadEnding(4));
             }
         }
         else
@@ -762,7 +762,7 @@ public class GameManager : MonoBehaviour
                     PlayerPrefs.SetInt("_relationship", 2);
                     StartCoroutine(Speak("Wendy: Sorry, I need to be somewhere. I promised.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
-                    StartCoroutine(Speak("Your loss.", waitTime, textSpeed));
+                    StartCoroutine(Speak("Hayden: Your loss.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
                 }
                 break;
@@ -779,12 +779,16 @@ public class GameManager : MonoBehaviour
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         StartCoroutine(Speak("Hayden: Told you, it's even better at night.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Wendy: Yeah I'm glad I came here now.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Hayden: I am glad as well.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                     case 2:
                         StartCoroutine(Speak("Hayden: I thought you needed to be somewhere?.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         StartCoroutine(Speak("Wendy: Change of plans, so I decided to follow your advice.", waitTime, textSpeed));
-                    yield return new WaitForSeconds(waitTime * 2.2f);
+                        yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                 }
                 break;
@@ -876,8 +880,29 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("_level", PlayerPrefs.GetInt("_level") + 1); 
         SceneManager.LoadScene("Game");
     }
-    void LoadEnding(int ending)
+    IEnumerator LoadEnding(int ending)
     {
+        switch (ending)
+        {
+            case 1:
+                StartCoroutine(Speak("", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                break;
+            case 2:
+                StartCoroutine(Speak("", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                break;
+            case 3:
+                StartCoroutine(Speak("", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                break;
+            case 4:
+                StartCoroutine(Speak("", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                break;
+            default:
+                break;
+        }
         fade.SetActive(true);
         StartCoroutine(FadeIn(fade, 51));
         PlayerPrefs.SetInt("_ending", ending);
