@@ -688,13 +688,13 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("Wish someone could just slide some slider and change the height and frequency of these waves.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Maybe they could even try to match some indicator flashing on their screen.", waitTime, textSpeed));
+                StartCoroutine(Speak("Maybe they could even try to match some indicator on their screen.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 yield return new WaitUntil(() => waveHeightCorrect && frequencyCorrect);
                 permitted = true;
                 StartCoroutine(Speak("Ah, that's more my speed. Thank you imaginary person.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                //! More dialogue including personal preferences
+                //! More dialogue
                 break;
             case 1:
                 StartCoroutine(Speak("I'm glad I got here before it got crowded.", waitTime, textSpeed));
@@ -706,6 +706,7 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("Shame they left, it gets lonely at this hour of the day.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
+                //! More dialogue
                 break;
             case 2:
                 permitted = true;
@@ -751,7 +752,9 @@ public class GameManager : MonoBehaviour
                 if (choice)
                 {
                     PlayerPrefs.SetInt("_relationship", 1);
-                    StartCoroutine(Speak("Wendy: Sure.", waitTime, textSpeed));
+                    StartCoroutine(Speak("Wendy: Sure, but what's the difference?", waitTime, textSpeed));
+                    yield return new WaitForSeconds(waitTime * 2.2f);
+                    StartCoroutine(Speak("Hayden: You'll see.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
                 }
                 else
@@ -759,10 +762,11 @@ public class GameManager : MonoBehaviour
                     PlayerPrefs.SetInt("_relationship", 2);
                     StartCoroutine(Speak("Wendy: Sorry, I need to be somewhere. I promised.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
+                    StartCoroutine(Speak("Your loss.", waitTime, textSpeed));
+                    yield return new WaitForSeconds(waitTime * 2.2f);
                 }
                 break;
             case 3:
-                //* Dialogue before level starts
                 permitted = true;
                 switch (PlayerPrefs.GetInt("_relationship"))
                 {
@@ -771,12 +775,16 @@ public class GameManager : MonoBehaviour
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                     case 1:
-                        StartCoroutine(Speak("Hayden: See, it's even better at night.", waitTime, textSpeed));
+                        StartCoroutine(Speak("Wendy: Woah.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Hayden: Told you, it's even better at night.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                     case 2:
                         StartCoroutine(Speak("Hayden: I thought you needed to be somewhere?.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Wendy: Change of plans, so I decided to follow your advice.", waitTime, textSpeed));
+                    yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                 }
                 break;
