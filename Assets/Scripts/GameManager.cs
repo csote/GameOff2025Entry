@@ -714,12 +714,17 @@ public class GameManager : MonoBehaviour
                 permitted = true;
                 StartCoroutine(Speak("Ah, that's more my speed. Thank you imaginary person.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                //! More dialogue
+                StartCoroutine(Speak("It's a shame I have to leave here in a few minutes.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("I really like this spot.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 1:
-                StartCoroutine(Speak("I'm glad I got here before it got crowded.", waitTime, textSpeed));
+                StartCoroutine(Speak("This spot will have to do", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 permitted = true;
+                StartCoroutine(Speak("I'm glad I got here before it got crowded.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("But looks like someone was here even earlier than me.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("I wonder who they were.", waitTime, textSpeed));
@@ -758,7 +763,14 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("Wendy: I noticed. Something about it just draws you here.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Hayden: You wanna spend the night here as well?", waitTime, textSpeed, false));
+                yield return _waitForSeconds5;
+                StartCoroutine(Speak("Hayden: You wanna spend the night here as well?", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Wendy: I haven't decided yet, will you?", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Hayden: One way to find out.", waitTime, textSpeed));
+                yield return new WaitForSeconds(waitTime * 2.2f);
+                StartCoroutine(Speak("Do I want to spend the night here?", waitTime, textSpeed, false));
                 choosing = true;
                 yield return new WaitForSeconds(waitTime * 1.5f);
                 StartCoroutine(PresentChoice(textSpeed));
@@ -772,9 +784,9 @@ public class GameManager : MonoBehaviour
                 if (choice)
                 {
                     PlayerPrefs.SetInt("_relationship", 1);
-                    StartCoroutine(Speak("Wendy: Sure, but what's the difference?", waitTime, textSpeed));
+                    StartCoroutine(Speak("Wendy: Sure, I wonder how it looks like at night.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
-                    StartCoroutine(Speak("Hayden: You'll see.", waitTime, textSpeed));
+                    StartCoroutine(Speak("Hayden: Don't want to ruin the surprise.", waitTime, textSpeed));
                     yield return new WaitForSeconds(waitTime * 2.2f);
                 }
                 else
@@ -801,13 +813,27 @@ public class GameManager : MonoBehaviour
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         StartCoroutine(Speak("Wendy: Yeah I'm glad I came here now.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
-                        StartCoroutine(Speak("Hayden: I am glad as well.", waitTime, textSpeed));
+                        StartCoroutine(Speak("Hayden: I could watch this for hours.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Wendy: Same, but I don't know if I'll be able to.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("I am really sleepy.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                     case 2:
                         StartCoroutine(Speak("Hayden: I thought you needed to be somewhere?.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         StartCoroutine(Speak("Wendy: Change of plans, so I decided to follow your advice.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Hayden: Was it good advice?", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Wendy: It's not as good as I expected I guess.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Hayden: I find it spectacular.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Wendy: I think I'll just sleep in this corner.", waitTime, textSpeed));
+                        yield return new WaitForSeconds(waitTime * 2.2f);
+                        StartCoroutine(Speak("Hayden: Suit yourself.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         break;
                 }
@@ -907,27 +933,27 @@ public class GameManager : MonoBehaviour
         switch (ending)
         {
             case 1:
-                StartCoroutine(Speak("Hayden: Thanks for staying awake with me.", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: Thanks for staying up with me.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Wendy: Sure thing.", waitTime, textSpeed));
+                StartCoroutine(Speak("Wendy: Thank you for inviting me here.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 2:
-                StartCoroutine(Speak("Hayden: We should have fallen asleep ages ago.", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: Seems you couldn't fall asleep.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Wendy: I wish I did.", waitTime, textSpeed));
+                StartCoroutine(Speak("Wendy: I wish I could have.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 3:
-                StartCoroutine(Speak("Hayden: Good night :).", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: Oh no, I'm falling asleep.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Wendy: Good night :).", waitTime, textSpeed));
+                StartCoroutine(Speak("Wendy: It's okay, at least we tried.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 4:
-                StartCoroutine(Speak("Wendy: Good night :(.", waitTime, textSpeed));
+                StartCoroutine(Speak("Wendy: Good night.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Hayden: Good night :(.", waitTime, textSpeed));
+                StartCoroutine(Speak("Hayden: Good night Wendy.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             default:
