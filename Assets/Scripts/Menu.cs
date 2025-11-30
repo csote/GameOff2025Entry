@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+using System.Collections; using System.Collections.Generic;
 using TMPro;
 using UnityEngine; using UnityEngine.UI; using UnityEngine.Audio; using UnityEngine.SceneManagement;
 
@@ -44,6 +44,8 @@ public class Menu : MonoBehaviour
     [SerializeField] Sprite[] sprites2;
     [SerializeField] Sprite[] sprites3;
     [SerializeField] Image pauseMenuBG;
+    [SerializeField] AudioSource musicPlayer;
+    [SerializeField] AudioClip ding;
     #endregion
 
     void Start()
@@ -89,9 +91,13 @@ public class Menu : MonoBehaviour
     }
     public void Play()
     {
+        musicPlayer.Stop();
+        musicPlayer.clip = ding;
+        musicPlayer.loop = false;
+        musicPlayer.Play();
         fade.SetActive(true);
         StartCoroutine(gameManager.FadeIn(fade, 51));
-        Invoke(nameof(LoadGame), 1);
+        Invoke(nameof(LoadGame), .6f);
     }
     void LoadGame()
     {

@@ -212,7 +212,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 0.35
+  m_Volume: 1
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -4402,6 +4402,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9957894280deeae4b934fcd7efddbcef, type: 3}
   - {fileID: 21300000, guid: a516442710aad3e4289f9411bb87eb62, type: 3}
   pauseMenuBG: {fileID: 182428536}
+  musicPlayer: {fileID: 0}
+  ding: {fileID: 0}
 --- !u!114 &627226812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4414,6 +4416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e55c34a0de9ce842bf2810cd1a946b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  textSpeed: 0
   he: {fileID: 2120176292}
   she: {fileID: 41360594}
   globalLight: {fileID: 619394801}
@@ -8878,7 +8881,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 8300000, guid: 960652342ada2b048b04d5d5cb6f4f5f, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.4
   m_Pitch: 1
   Loop: 1
   Mute: 0
