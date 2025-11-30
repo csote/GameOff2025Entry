@@ -241,7 +241,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         waveHeightCorrect = false; frequencyCorrect = false; won = false; lost = false; paused = false; started = false; speaking = false; choosing = false; choice = false; permitted = false; fireOut = false; flag1 = true; musicDown = false;
         if (index != 0)
+        {
             StartCoroutine(Wind());
+            funny.SetActive(false);
+            funnyText.gameObject.SetActive(false);
+        }
         StartCoroutine(CampfireCheck());
         StartCoroutine(Dialogue(index));
         StartCoroutine(PlayMusic());
@@ -261,7 +265,7 @@ public class GameManager : MonoBehaviour
     }
     void MenuCheck()
     {
-        if (input.Player.Pause.WasPressedThisFrame() && !loseMenu.activeSelf)
+        if (input.Player.Pause.WasPressedThisFrame() && !loseMenu.activeSelf && !fade.activeSelf)
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             paused = !paused;
@@ -282,7 +286,7 @@ public class GameManager : MonoBehaviour
     }
     public void PressPause()
     {
-        if (!loseMenu.activeSelf)
+        if (!loseMenu.activeSelf && !fade.activeSelf)
         {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
             paused = !paused;
@@ -862,18 +866,12 @@ public class GameManager : MonoBehaviour
         TextMeshProUGUI dialogueText = dialogueBox.GetComponentInChildren<TextMeshProUGUI>();
         dialogueText.text = sentence;
         dialogueBox.SetActive(true);
-        if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
-            StartCoroutine(FadeIn(dialogueBox, cd, 128));
-        else
-            StartCoroutine(FadeIn(dialogueBox, cd, 235));
+        StartCoroutine(FadeIn(dialogueBox, cd, 235));
         StartCoroutine(FadeIn(dialogueText.gameObject, cd, 255, false));
         yield return new WaitForSeconds(closeTime);
         if (autoClose)
         {
-            if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
-                StartCoroutine(FadeOut(dialogueBox, cd, 128));
-            else
-                StartCoroutine(FadeOut(dialogueBox, cd, 235));
+            StartCoroutine(FadeOut(dialogueBox, cd, 235));
             StartCoroutine(FadeOut(dialogueText.gameObject, cd, 255, false));
             yield return new WaitUntil(() => dialogueBox.GetComponent<Image>().color.a == 0);
             dialogueBox.SetActive(false);
