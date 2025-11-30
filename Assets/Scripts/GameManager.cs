@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Image campfireRiskFill;
     [SerializeField] Image windFillLeft;
     [SerializeField] Image windFillRight;
+    [SerializeField] GameObject funny;
+    [SerializeField] TextMeshProUGUI funnyText;
 
     [SerializeField] GameObject pauseMenu;
     [SerializeField] GameObject loseMenu;
@@ -111,6 +113,7 @@ public class GameManager : MonoBehaviour
             fade.SetActive(true);
             StartCoroutine(FadeOut(fade, 51));
             Invoke(nameof(Necessary), 0.51f);
+            Invoke(nameof(Funny), 7);
             menuScript = GetComponent<Menu>();
             menuScript.ControlImageSwitcher(menuScript.currentPalette);
             songs = new List<AudioClip> { song1, song2, song3, song4, song5, song6 };
@@ -120,6 +123,17 @@ public class GameManager : MonoBehaviour
     void Necessary()
     {
         fade.SetActive(false);
+    }
+    void Funny()
+    {
+        StartCoroutine(FadeOut(funny, 51));
+        StartCoroutine(FadeOut(funnyText.gameObject, 51, 255, false));
+        Invoke(nameof(FunnyNecessary), 1);
+    }
+    void FunnyNecessary()
+    {
+        funny.SetActive(false);
+        funnyText.gameObject.SetActive(false);
     }
     void Update()
     {
@@ -984,11 +998,12 @@ public class GameManager : MonoBehaviour
     }
     IEnumerator CampfireCheck()
     {
+        yield return new WaitUntil(() => permitted);
         yield return _waitForSeconds1;
         if (waveHeight >= 80 && campfireLit)
         {
             campfireRisk = Random.Range(campfireRiskFloor, 101);
-            campfireRiskFloor++;
+            campfireRiskFloor += 4;
             campfireRiskFill.fillAmount = campfireRiskFloor / 100f;
         }
 
