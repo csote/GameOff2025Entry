@@ -266,6 +266,27 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    public void PressPause()
+    {
+        if (!loseMenu.activeSelf)
+        {
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
+            paused = !paused;
+            Time.timeScale = paused ? 0 : 1;
+            if (paused)
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                    crackling.Pause();
+                waveAudio.Pause();
+            }
+            else
+            {
+                if (PlayerPrefs.GetInt("_level") == 0 || PlayerPrefs.GetInt("_level") == 3)
+                    crackling.UnPause();
+                waveAudio.UnPause();
+            }
+        }
+    }
     void UpdateUI()
     {
         maxWHF = waveHeightSpot / 100;
