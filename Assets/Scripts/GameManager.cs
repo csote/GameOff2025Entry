@@ -76,6 +76,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject fade;
     [SerializeField] Slider sleepinessBar;
     [SerializeField] TextMeshProUGUI dynamicText;
+    [SerializeField] TextMeshProUGUI dynamicText2;
 
     [SerializeField] AudioSource waveAudio;
     [SerializeField] AudioSource crackling;
@@ -110,7 +111,7 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Game")
         {
-            if (PlayerPrefs.GetInt("_tutorial") == 0)
+            if (PlayerPrefs.GetInt("_tutorial") == 0 && PlayerPrefs.GetInt("_level") == 0)
                 FunnyToggle(true);
             fade.SetActive(true);
             StartCoroutine(FadeOut(fade, 51));
@@ -717,21 +718,13 @@ public class GameManager : MonoBehaviour
             StartCoroutine(FadeIn(funnyText.gameObject, 51, 255, false));
         }
     }
-    void FunnyVectors(Vector3 imagePos, Vector3 eulerAngles, Vector3 textPos)
-    {
-        funny.GetComponent<RectTransform>().anchoredPosition = imagePos;
-        funny.GetComponent<RectTransform>().eulerAngles = eulerAngles;
-        funnyText.GetComponent<RectTransform>().anchoredPosition = textPos;
-    }
-    void FunnyText(string sentence)
-    {
-        funnyText.text = sentence;
-    }
     void MasterFunny(Vector3 imagePos, Vector3 eulerAngles, Vector3 textPos, string sentence)
     {
         FunnyToggle(false);
-        FunnyVectors(imagePos, eulerAngles, textPos);
-        FunnyText(sentence);
+        funny.GetComponent<RectTransform>().anchoredPosition = imagePos;
+        funny.GetComponent<RectTransform>().eulerAngles = eulerAngles;
+        funnyText.GetComponent<RectTransform>().anchoredPosition = textPos;
+        funnyText.text = sentence;
         FunnyToggle(true);
         FunnyFade(true);
     }
@@ -779,11 +772,7 @@ public class GameManager : MonoBehaviour
                 yield return _waitForSeconds1;
                 StartCoroutine(Speak("This is nice.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("It would be nicer if these waves weren't so damn low.", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Wish someone could just slide some slider and change the height and frequency of these waves.", waitTime, textSpeed));
-                yield return new WaitForSeconds(waitTime * 2.2f);
-                StartCoroutine(Speak("Maybe they could even try to match some indicator on their screen.", waitTime, textSpeed));
+                StartCoroutine(Speak("It would be nicer if these waves weren't so low.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 yield return new WaitUntil(() => waveHeightCorrect && frequencyCorrect);
                 permitted = true;
@@ -795,6 +784,7 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 break;
             case 1:
+                yield return _waitForSeconds1;
                 StartCoroutine(Speak("This spot will have to do", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 permitted = true;
@@ -806,9 +796,9 @@ public class GameManager : MonoBehaviour
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("Shame they left, it gets lonely at this hour of the day.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
-                //! More dialogue
                 break;
             case 2:
+                yield return _waitForSeconds1;
                 permitted = true;
                 StartCoroutine(Speak("???: You are in my spot.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
@@ -874,6 +864,7 @@ public class GameManager : MonoBehaviour
                 }
                 break;
             case 3:
+                yield return _waitForSeconds1;
                 permitted = true;
                 switch (PlayerPrefs.GetInt("_relationship"))
                 {
@@ -1147,6 +1138,8 @@ public class GameManager : MonoBehaviour
                 alpha += step;
                 if (text == dynamicText)
                     dynamicText.color = new Color(menuScript.currentPalette[3].r, menuScript.currentPalette[3].g, menuScript.currentPalette[3].b, alpha / 255f);
+                else if (text == dynamicText2)
+                    dynamicText2.color = new Color(menuScript.currentPalette[3].r, menuScript.currentPalette[3].g, menuScript.currentPalette[3].b, alpha / 255f);
                 else
                 {
                     color.a = alpha / 255f;
@@ -1157,6 +1150,8 @@ public class GameManager : MonoBehaviour
             color.a = maxStep / 255f;
             if (text == dynamicText)
                 dynamicText.color = menuScript.currentPalette[3];
+            else if (text == dynamicText2)
+                dynamicText2.color = menuScript.currentPalette[3];
             else
                 text.color = color;
         }
@@ -1193,6 +1188,8 @@ public class GameManager : MonoBehaviour
                 alpha -= step;
                 if (text == dynamicText)
                     dynamicText.color = new Color(menuScript.currentPalette[3].r, menuScript.currentPalette[3].g, menuScript.currentPalette[3].b, alpha / 255f);
+                else if (text == dynamicText2)
+                    dynamicText2.color = new Color(menuScript.currentPalette[3].r, menuScript.currentPalette[3].g, menuScript.currentPalette[3].b, alpha / 255f);
                 else
                 {
                     color.a = alpha / 255;
@@ -1203,6 +1200,8 @@ public class GameManager : MonoBehaviour
             color.a = 0;
             if (text == dynamicText)
                 dynamicText.color = new Color(menuScript.currentPalette[3].r, menuScript.currentPalette[3].g, menuScript.currentPalette[3].b, 0);
+            else if (text == dynamicText2)
+                dynamicText2.color = new Color(menuScript.currentPalette[3].r, menuScript.currentPalette[3].g, menuScript.currentPalette[3].b, 0);
             else
                 text.color = color;
         }

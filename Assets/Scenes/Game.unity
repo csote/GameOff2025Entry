@@ -4927,6 +4927,7 @@ MonoBehaviour:
   fade: {fileID: 1800427019}
   sleepinessBar: {fileID: 1753766703}
   dynamicText: {fileID: 1218082937}
+  dynamicText2: {fileID: 426006633}
   waveAudio: {fileID: 1385168295}
   crackling: {fileID: 539019888}
   flint: {fileID: 2141141773}
