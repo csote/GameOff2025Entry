@@ -15,6 +15,7 @@ public class Menu : MonoBehaviour
     [SerializeField] Slider textSpeedSlider;
     [SerializeField] TextMeshProUGUI textSpeedText;
     [SerializeField] TMP_Dropdown qualityDropdown;
+    [SerializeField] TextMeshProUGUI tutorialText;
     [SerializeField] Color[] colourPalette1;
     [SerializeField] Color[] colourPalette2;
     [SerializeField] Color[] colourPalette3;
@@ -75,6 +76,14 @@ public class Menu : MonoBehaviour
         if (PlayerPrefs.GetInt("_palette") == 0)
             PlayerPrefs.SetInt("_palette", 1);
         SetColourPalette(PlayerPrefs.GetInt("_palette"));
+
+        if (SceneManager.GetActiveScene().name != "Game")
+        {
+            if (PlayerPrefs.GetInt("_tutorial") == 0)
+                tutorialText.text = "Tutorial: On";
+            else
+                tutorialText.text = "Tutorial: Off";
+        }
 
         switch (PlayerPrefs.GetInt("_palette"))
         {
@@ -157,6 +166,19 @@ public class Menu : MonoBehaviour
                 textSpeedText.text = "4 - Fast.";
                 PlayerPrefs.SetInt("_textSpeedLevel", 4);
                 break;
+        }
+    }
+    public void ToggleTutorial()
+    {
+        if (PlayerPrefs.GetInt("_tutorial") == 0)
+        {
+            PlayerPrefs.SetInt("_tutorial", 1);
+            tutorialText.text = "Tutorial: Off";
+        }
+        else
+        {
+            PlayerPrefs.SetInt("_tutorial", 0);
+            tutorialText.text = "Tutorial: On";
         }
     }
     public void SetColourPalette(int index)

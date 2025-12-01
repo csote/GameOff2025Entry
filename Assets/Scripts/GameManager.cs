@@ -110,10 +110,11 @@ public class GameManager : MonoBehaviour
     {
         if (SceneManager.GetActiveScene().name == "Game")
         {
+            if (PlayerPrefs.GetInt("_tutorial") == 0)
+                FunnyToggle(true);
             fade.SetActive(true);
             StartCoroutine(FadeOut(fade, 51));
             Invoke(nameof(Necessary), 0.51f);
-            Invoke(nameof(Funny), 7);
             menuScript = GetComponent<Menu>();
             menuScript.ControlImageSwitcher(menuScript.currentPalette);
             songs = new List<AudioClip> { song1, song2, song3, song4, song5, song6 };
@@ -123,17 +124,6 @@ public class GameManager : MonoBehaviour
     void Necessary()
     {
         fade.SetActive(false);
-    }
-    void Funny()
-    {
-        StartCoroutine(FadeOut(funny, 51));
-        StartCoroutine(FadeOut(funnyText.gameObject, 51, 255, false));
-        Invoke(nameof(FunnyNecessary), 1);
-    }
-    void FunnyNecessary()
-    {
-        funny.SetActive(false);
-        funnyText.gameObject.SetActive(false);
     }
     void Update()
     {
@@ -241,11 +231,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         waveHeightCorrect = false; frequencyCorrect = false; won = false; lost = false; paused = false; started = false; speaking = false; choosing = false; choice = false; permitted = false; fireOut = false; flag1 = true; musicDown = false;
         if (index != 0)
-        {
             StartCoroutine(Wind());
-            funny.SetActive(false);
-            funnyText.gameObject.SetActive(false);
-        }
         StartCoroutine(CampfireCheck());
         StartCoroutine(Dialogue(index));
         StartCoroutine(PlayMusic());
@@ -713,13 +699,84 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    void FunnyToggle(bool state)
+    {
+        funny.SetActive(state);
+        funnyText.gameObject.SetActive(state);
+    }
+    void FunnyFade(bool state)
+    {
+        if (!state)
+        {
+            StartCoroutine(FadeOut(funny, 51));
+            StartCoroutine(FadeOut(funnyText.gameObject, 51, 255, false));
+        }
+        else
+        {
+            StartCoroutine(FadeIn(funny, 51));
+            StartCoroutine(FadeIn(funnyText.gameObject, 51, 255, false));
+        }
+    }
+    void FunnyVectors(Vector3 imagePos, Vector3 eulerAngles, Vector3 textPos)
+    {
+        funny.GetComponent<RectTransform>().anchoredPosition = imagePos;
+        funny.GetComponent<RectTransform>().eulerAngles = eulerAngles;
+        funnyText.GetComponent<RectTransform>().anchoredPosition = textPos;
+    }
+    void FunnyText(string sentence)
+    {
+        funnyText.text = sentence;
+    }
+    void MasterFunny(Vector3 imagePos, Vector3 eulerAngles, Vector3 textPos, string sentence)
+    {
+        FunnyToggle(false);
+        FunnyVectors(imagePos, eulerAngles, textPos);
+        FunnyText(sentence);
+        FunnyToggle(true);
+        FunnyFade(true);
+    }
     IEnumerator Dialogue(int index)
     {
         speaking = true;
-        yield return _waitForSeconds1;
         switch (index)
         {
             case 0:
+                if (PlayerPrefs.GetInt("_tutorial") == 0)
+                {
+                    FunnyToggle(true);
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(-35, 386, 0), new Vector3(0, 0, -162), new Vector3(-501, 254, 0), "This is the wave height slider, try to match this to how much the indicator on the top left gets filled.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(-35, 262, 0), new Vector3(0, 0, -162), new Vector3(-501, 130, 0), "This one is the frequency slider, try to match it to how fast the indicator gets filled.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(-35, 48, 0), new Vector3(0, 0, -162), new Vector3(-501, -111, 0), "This is a flint and steel, if your campfire goes out click this to light it back. If the campfire is lit it helps people sleep faster.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(277, -130, 0), new Vector3(0, 0, -282), new Vector3(494, 176, 0), "This is the indicator. It randomizes the wave height and frequency requirement every 30 seconds.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(277, -378, 0), new Vector3(0, 0, -282), new Vector3(494, -72, 0), "This is the wind display. Counteract it by changing values in the opposite direction.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(277, -617, 0), new Vector3(0, 0, -282), new Vector3(494, -311, 0), "Lastly, this starts to fill if you set wave height too big.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(277, -617, 0), new Vector3(0, 0, -282), new Vector3(494, -311, 0), "How much it is filled determines the % chance of campfire going out.");
+                    yield return _waitForSeconds5;
+                    FunnyFade(false);
+                    yield return _waitForSeconds3;
+                }
+                yield return _waitForSeconds1;
                 StartCoroutine(Speak("This is nice.", waitTime, textSpeed));
                 yield return new WaitForSeconds(waitTime * 2.2f);
                 StartCoroutine(Speak("It would be nicer if these waves weren't so damn low.", waitTime, textSpeed));
