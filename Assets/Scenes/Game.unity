@@ -859,7 +859,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.62352943, g: 0.4862745, b: 0.3254902, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4787,8 +4787,6 @@ MonoBehaviour:
   - {fileID: 1269078686}
   - {fileID: 430480544}
   - {fileID: 1336063942}
-  - {fileID: 1798351373}
-  - {fileID: 73794693}
   - {fileID: 1646102639}
   - {fileID: 2113577505}
   imagesBackground:
@@ -4914,6 +4912,8 @@ MonoBehaviour:
   waveNightHighFirelessAnimator: {fileID: 1737157032}
   campfireLight: {fileID: 539019885}
   campfireButton: {fileID: 840826897}
+  whFill: {fileID: 1798351373}
+  fFill: {fileID: 73794693}
   whfFill: {fileID: 267428068}
   campfireRiskFill: {fileID: 1147730618}
   windFillLeft: {fileID: 1179716370}
@@ -6294,7 +6294,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Skill Issue
+  m_text: You lost.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 29118c24a98b9e34c83f43d174445bef, type: 2}
   m_sharedMaterial: {fileID: 6402715664468668792, guid: 29118c24a98b9e34c83f43d174445bef, type: 2}
@@ -11633,7 +11633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.62352943, g: 0.4862745, b: 0.3254902, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

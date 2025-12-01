@@ -20,10 +20,10 @@ public class Ending : MonoBehaviour
         switch (PlayerPrefs.GetInt("_ending"))
         {
             case 1:
-                flavourText.text = "Now kiss.";
+                flavourText.text = "And they lived happily ever after.";
                 break;
             case 2:
-                flavourText.text = "What the hell is her problem?";
+                flavourText.text = "What is her problem?";
                 break;
             case 3:
                 flavourText.text = "It's almost like you need to do the opposite of that.";

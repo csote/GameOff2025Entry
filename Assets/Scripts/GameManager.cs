@@ -26,6 +26,8 @@ public class GameManager : MonoBehaviour
     bool waveHeightCorrect, frequencyCorrect, campfireLit, musicPlaying, raining, won, lost, started, speaking, choosing, choice, permitted, fireOut, flag1, musicDown;
     string direction;
     float currentWaveCurrentFrame = 0;
+    Color fillRed = new Color(140 / 255f, 43 / 255f, 43 / 255f);
+    Color fillGreen = new Color(97 / 255f, 180 / 255f, 49 / 255f);
     Animator currentAnimator;
     List<AudioClip> songs;
     #endregion
@@ -62,6 +64,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Animator waveNightHighFirelessAnimator;
     [SerializeField] GameObject campfireLight;
     [SerializeField] GameObject campfireButton;
+    [SerializeField] Image whFill;
+    [SerializeField] Image fFill;
     [SerializeField] Image whfFill;
     [SerializeField] Image campfireRiskFill;
     [SerializeField] Image windFillLeft;
@@ -167,7 +171,7 @@ public class GameManager : MonoBehaviour
                 waveNightLow.SetActive(true);
                 waveNightLowAnimator.speed = 0.6f;
                 currentAnimator = waveNightLowAnimator;
-                difficulty = 2.5f;
+                difficulty = 2;
                 globalLight.intensity = 0.3f;
                 campfireLit = true;
                 campfireLight.SetActive(true);
@@ -183,7 +187,7 @@ public class GameManager : MonoBehaviour
                 waveDawnLow.SetActive(true);
                 waveDawnLowAnimator.speed = 0.6f;
                 currentAnimator = waveDawnLowAnimator;
-                difficulty = 2;
+                difficulty = 1.5f;
                 globalLight.intensity = 1;
                 globalLight.color = new Color(255/255f, 213/255f, 213/255f, 1);
                 campfireLit = false;
@@ -198,7 +202,7 @@ public class GameManager : MonoBehaviour
                 waveNoonLow.SetActive(true);
                 waveNoonLowAnimator.speed = 0.6f;
                 currentAnimator = waveNoonLowAnimator;
-                difficulty = 1.5f;
+                difficulty = 1.25f;
                 globalLight.intensity = 1;
                 campfireLit = false;
                 musicPlaying = true;
@@ -737,35 +741,39 @@ public class GameManager : MonoBehaviour
                 if (PlayerPrefs.GetInt("_tutorial") == 0)
                 {
                     FunnyToggle(true);
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(-35, 386, 0), new Vector3(0, 0, -162), new Vector3(-501, 254, 0), "This is the wave height slider, try to match this to how much the indicator on the top left gets filled.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(-35, 262, 0), new Vector3(0, 0, -162), new Vector3(-501, 130, 0), "This one is the frequency slider, try to match it to how fast the indicator gets filled.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(-35, 48, 0), new Vector3(0, 0, -162), new Vector3(-501, -111, 0), "This is a flint and steel, if your campfire goes out click this to light it back. If the campfire is lit it helps people sleep faster.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
+                    FunnyFade(false);
+                    yield return _waitForSeconds1;
+                    MasterFunny(new Vector3(300, -166, 0), new Vector3(0, 0, -218), new Vector3(0, 116, 0), "This is the bar of sleepiness, Your job is to fill it up by matching wave height and frequency to the indicator.");
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(277, -130, 0), new Vector3(0, 0, -282), new Vector3(494, 176, 0), "This is the indicator. It randomizes the wave height and frequency requirement every 30 seconds.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(277, -378, 0), new Vector3(0, 0, -282), new Vector3(494, -72, 0), "This is the wind display. Counteract it by changing values in the opposite direction.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(277, -617, 0), new Vector3(0, 0, -282), new Vector3(494, -311, 0), "Lastly, this starts to fill if you set wave height too big.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds1;
                     MasterFunny(new Vector3(277, -617, 0), new Vector3(0, 0, -282), new Vector3(494, -311, 0), "How much it is filled determines the % chance of campfire going out.");
-                    yield return _waitForSeconds5;
+                    yield return _waitForSeconds10;
                     FunnyFade(false);
                     yield return _waitForSeconds3;
                 }
@@ -889,9 +897,9 @@ public class GameManager : MonoBehaviour
                     case 2:
                         StartCoroutine(Speak("Hayden: I thought you needed to be somewhere?.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
-                        StartCoroutine(Speak("Wendy: Change of plans, so I decided to follow your advice.", waitTime, textSpeed));
+                        StartCoroutine(Speak("Wendy: Change of plans, so I decided to come here instead.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
-                        StartCoroutine(Speak("Hayden: Was it good advice?", waitTime, textSpeed));
+                        StartCoroutine(Speak("Hayden: So, waht do you think?", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
                         StartCoroutine(Speak("Wendy: It's not as good as I expected I guess.", waitTime, textSpeed));
                         yield return new WaitForSeconds(waitTime * 2.2f);
@@ -1031,16 +1039,28 @@ public class GameManager : MonoBehaviour
     void WaveHeightCheck()
     {
         if (waveHeight >= waveHeightSpot - leeway && waveHeight <= waveHeightSpot + leeway)
+        {
             waveHeightCorrect = true;
+            whFill.color = fillGreen;
+        }
         else
+        {
             waveHeightCorrect = false;
+            whFill.color = fillRed;
+        }
     }
     void FrequencyCheck()
     {
         if (frequency >= frequencySpot - leeway && frequency <= frequencySpot + leeway)
+        {
             frequencyCorrect = true;
+            fFill.color = fillGreen;
+        }
         else
+        {
             frequencyCorrect = false;
+            fFill.color = fillRed;
+        }
     }
     IEnumerator CampfireCheck()
     {
